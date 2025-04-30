@@ -1,0 +1,25 @@
+@font-face {
+  font-family: Outfit;
+  src: url("assets/fonts/Outfit-Thin.ttf");
+  font-weight: 100;
+}
+
+@font-face {
+  font-family: Outfit;
+  src: url("assets/fonts/Outfit-ExtraLight.ttf");
+  font-weight: 200;
+}
+
+@font-face {
+  font-family: Outfit;
+  src: url("assets/fonts/Outfit-Regular.ttf");
+  font-weight: 400;
+}
+
+
+@import "tailwindcss";
+
+/* here you add the font to tailwind */
+@theme{
+  --font-outfit: Outfit, "sans-serif";
+}
