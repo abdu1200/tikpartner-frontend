@@ -143,8 +143,8 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
               tiktokVideoCount: data.tiktok_info.tiktok_video_count,
               tiktokLikesCount: data.tiktok_info.tiktok_likes_count,
             });
-            
-            
+
+
             localStorage.removeItem('formDataBeforeTikTok');
             localStorage.removeItem('currentStepBeforeTikTok');
 
