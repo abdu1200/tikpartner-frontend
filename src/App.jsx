@@ -10,6 +10,11 @@ import InfluencerSignupForm from './components/influencers/signup/SignupForm'
 import InfluencerLoginForm from './components/influencers/LoginForm'
 import InfluencerPasswordReset from './components/influencers/PasswordReset'
 
+import BrowseInfluencersPage from './components/brands/BrowseInfluencer/BrowseInfluencersPage'
+import InfluencerDetailPage from './components/brands/BrowseInfluencer/InfluencerDetailPage'
+import SearchInfluencersPage from './components/brands/SearchInfluencer/SearchInfluencersPage'
+
+
 
 
 
@@ -28,6 +33,10 @@ function App() {
       <Route path="/InfluencerSignup" element={<InfluencerSignupForm />} />
       <Route path="/InfluencerLogin" element={<InfluencerLoginForm />} />
       <Route path="/InfluencerPasswordReset" element={<InfluencerPasswordReset />} />
+      <Route path="/BrowseInfluencersPage" element={<BrowseInfluencersPage />} />
+      <Route path="/influencer/:id" element={<InfluencerDetailPage />} />
+      <Route path="/SearchInfluencersPage" element={<SearchInfluencersPage />} />
+
     </Routes>
   )
 }

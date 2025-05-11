@@ -8,7 +8,7 @@ import {
   BookOpen,
   ChevronDown
 } from "lucide-react";
-import axios from 'axios';
+import backendUrl from '../../../utils/backendUrl';
 
 export default function Step2ServiceInfo({ formData, handleChange, updateFormData, nextStep, prevStep }) {
 
@@ -128,7 +128,7 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
         try {
           // Send the code to your Django backend using axios
 
-          const response = await axios.post('https://tikbackend.onrender.com/api/auth/tiktok/', { code });
+          const response = await backendUrl.post('/api/auth/tiktok/', { code });
           const data = response.data;
 
           console.log("coming user data", data);

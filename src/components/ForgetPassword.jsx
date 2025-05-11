@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import backendUrl from "../utils/backendUrl";
 
 
 //for PasswordResetRequest
@@ -16,8 +16,8 @@ const ForgetPassword = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(
-        'https://tikbackend.onrender.com/auth/password-reset/',
+      const response = await backendUrl.post(
+        '/auth/password-reset/',
         { email }
       );
       

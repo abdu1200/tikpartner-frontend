@@ -2,7 +2,7 @@ import { useState } from 'react';
 import Step1PersonalInfo from './Step1PersonalInfo';
 import Step2CompanyInfo from './Step2CompanyInfo';
 import Step3CompanyDetails from './Step3CompanyDetails';
-import axios from 'axios';
+import backendUrl from '../../../utils/backendUrl';
 
 export default function SignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -85,7 +85,7 @@ export default function SignupForm() {
       
       //console.log('Sending data:', JSON.stringify(requestData));
 
-      const response = await axios.post('https://tikbackend.onrender.com/auth/brand-register/', requestData);
+      const response = await backendUrl.post('/auth/brand-register/', requestData);
       
       console.log('Registration successful:', response.data);
       alert('Signup successful!');

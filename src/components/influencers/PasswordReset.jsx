@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -54,8 +54,8 @@ const PasswordReset = () => {
     setMessage('');
 
     try {
-      const response = await axios.post(
-        'https://tikbackend.onrender.com/auth/password-reset/confirm/',
+      const response = await backendUrl.post(
+        '/auth/password-reset/confirm/',
         {
           uid,
           token,

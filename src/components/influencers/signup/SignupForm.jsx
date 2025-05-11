@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import Step1PersonalInfo from './Step1PersonalInfo';
 import Step2ServiceInfo from './Step2ServiceInfo';
 import Step3ServiceDetails from './Step3ServiceDetails';
-import axios from 'axios';
+import backendUrl from '../../../utils/backendUrl';
 
 export default function SignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
@@ -15,7 +15,8 @@ export default function SignupForm() {
     lastName: '',
     email: '',
     password: '',
-    
+    gender:'',
+
     // Step 2 data
     contentType: 'tech',
     tiktokUsername: '',
@@ -95,6 +96,7 @@ export default function SignupForm() {
           password: formData.password
         },
         category: categoryId,
+        gender: formData.gender,
         languages: languageIds,
         budget: formData.budgetAmount,
         tiktok_username: formData.tiktokUsername,
@@ -107,7 +109,7 @@ export default function SignupForm() {
       
       //console.log('Sending data:', JSON.stringify(requestData));
 
-      const response = await axios.post('https://tikbackend.onrender.com/auth/influencer-register/', requestData);
+      const response = await backendUrl.post('/auth/influencer-register/', requestData);
       
       console.log('Registration successful:', response.data);
       alert('Signup successful!');

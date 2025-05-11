@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import axios from 'axios';
+import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom'
 import { Eye, EyeOff } from 'lucide-react';
 
@@ -25,7 +25,7 @@ export default function LoginForm() {
     
     //handle authentication
     try {
-      const response = await axios.post('https://tikbackend.onrender.com/auth/login/', {
+      const response = await backendUrl.post('/auth/login/', {
         email,
         password
       });
@@ -44,7 +44,10 @@ export default function LoginForm() {
       localStorage.setItem('refreshToken', response.data.refresh);
       
       console.log('Login successful', response.data);
-      alert('Login successful!');
+      //alert('Login successful!');
+
+      navigate('/BrowseInfluencersPage')
+
       
       // Redirect to brand landing page
       // window.location.href = '/brandlandingpage';

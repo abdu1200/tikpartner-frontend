@@ -102,6 +102,23 @@ export default function Step1PersonalInfo({ formData, handleChange, nextStep }) 
               className="w-full p-3 h-[44px] md:p-4 border border-gray-300 rounded md:rounded-lg focus:outline-none focus:ring-1 focus:ring-pink-600 md:text-lg placeholder:text-sm placeholder:font-light md:placeholder:text-lg"
             />
           </div>
+
+          <div className="mb-[20px] md:mb-6">
+            <label htmlFor="gender" className="block text-sm text-gray-700 mb-[4px] md:text-lg">Gender</label>
+            <select
+              id="gender"
+              name="gender"
+              value={formData.gender}
+              onChange={handleChange}
+              required
+              className="w-full p-2 h-[44px] border border-gray-300 rounded md:rounded-lg focus:outline-none focus:ring-1 focus:ring-pink-600 md:text-lg font-light text-gray-700"
+            >
+              <option className="font-light" value="" disabled>Select your gender</option>
+              <option className="font-light" value="male">Male</option>
+              <option className="font-light" value="female">Female</option>
+            </select>
+          </div>
+
           
           <div className="mb-[40px] md:mb-8">
             <label htmlFor="password" className="block text-sm text-gray-700 mb-[4px] md:text-lg">Password</label>
