@@ -11,6 +11,11 @@ const InfluencerDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isFavorite, setIsFavorite] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem('user')));
+  }, []);
 
   useEffect(() => {
     const fetchInfluencerDetail = async () => {
@@ -66,6 +71,23 @@ const InfluencerDetailPage = () => {
     2 : "amharic",
     3 : "oromiffa",
   };
+
+
+  const handleSendMessage = async () => {
+    try {
+      const response = await backendUrl.post("/api/conversations/", {
+        participants: [currentUser.id, influencer.user.id]
+      }); 
+  
+      const conversationId = response.data.id;
+      navigate(`/conversations/${conversationId}`);
+
+    } catch (error) {
+      console.error("Failed to create conversation:", error);
+      alert("Could not create a conversation. Please try again.");
+    }
+  };
+  
   
 
   const handleFavoriteClick = (e) => {
@@ -176,7 +198,10 @@ const InfluencerDetailPage = () => {
               <button className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 cursor-pointer">
                 Hire
               </button>
-              <button className="flex-1 border border-pink-600 text-pink-600 py-3 rounded-lg font-medium hover:bg-gray-50 cursor-pointer">
+              <button 
+                className="flex-1 border border-pink-600 text-pink-600 py-3 rounded-lg font-medium hover:bg-gray-50 cursor-pointer"
+                onClick={handleSendMessage}
+              >
                 Send message
               </button>
             </div>

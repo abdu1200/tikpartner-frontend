@@ -25,6 +25,9 @@ export default function LoginForm() {
     
     //handle authentication
     try {
+      // Clear any existing tokens/data first
+      localStorage.clear();
+
       const response = await backendUrl.post('/auth/login/', {
         email,
         password
@@ -36,21 +39,19 @@ export default function LoginForm() {
         return;
       }
 
-      // Clear any existing tokens/data first
-      localStorage.clear();
+    
       
       // Store tokens in localStorage or secure storage
       localStorage.setItem('accessToken', response.data.access);     // localStorage is a built-in Web API available globally in browsers, and a frontend code has access to the localStorage since the frontend code runs on the browser, unlike server codes like django who runs on a server machine
       localStorage.setItem('refreshToken', response.data.refresh);
+      localStorage.setItem('user', JSON.stringify(response.data.profile.user));
+
       
       console.log('Login successful', response.data);
       //alert('Login successful!');
 
-      navigate('/BrowseInfluencersPage')
+      navigate('/BrowseInfluencersPage');
 
-      
-      // Redirect to brand landing page
-      // window.location.href = '/brandlandingpage';
       
     } catch (error) {
       console.log('Login error:', error);

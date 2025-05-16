@@ -1,18 +1,21 @@
 import { Routes, Route } from 'react-router-dom'
 import LandingPage from './components/LandingPage'
 import ForgetPassword from './components/ForgetPassword'
-import BrandHomePage from './components/brands/HomePage'
-import BrandSignupForm from './components/brands/signup/SignupForm'
-import BrandLoginForm from './components/brands/LoginForm'
-import BrandPasswordReset from './components/brands/PasswordReset'
-import InfluencerHomePage from './components/influencers/HomePage'
-import InfluencerSignupForm from './components/influencers/signup/SignupForm'
-import InfluencerLoginForm from './components/influencers/LoginForm'
-import InfluencerPasswordReset from './components/influencers/PasswordReset'
+import BrandHomePage from './pages/brands/HomePage'
+import BrandSignupForm from './pages/brands/signup/SignupForm'
+import BrandLoginForm from './pages/brands/LoginForm'
+import BrandPasswordReset from './pages/brands/PasswordReset'
+import InfluencerHomePage from './pages/influencers/HomePage'
+import InfluencerSignupForm from './pages/influencers/signup/SignupForm'
+import InfluencerLoginForm from './pages/influencers/LoginForm'
+import InfluencerPasswordReset from './pages/influencers/PasswordReset'
 
-import BrowseInfluencersPage from './components/brands/BrowseInfluencer/BrowseInfluencersPage'
-import InfluencerDetailPage from './components/brands/BrowseInfluencer/InfluencerDetailPage'
-import SearchInfluencersPage from './components/brands/SearchInfluencer/SearchInfluencersPage'
+import BrowseInfluencersPage from './pages/brands/BrowseInfluencer/BrowseInfluencersPage'
+import InfluencerDetailPage from './pages/brands/BrowseInfluencer/InfluencerDetailPage'
+import SearchInfluencersPage from './pages/brands/SearchInfluencer/SearchInfluencersPage'
+
+import ConversationListPage from './components/ConversationList'
+import ChatPage from './components/Chat'
 
 
 
@@ -36,6 +39,9 @@ function App() {
       <Route path="/BrowseInfluencersPage" element={<BrowseInfluencersPage />} />
       <Route path="/influencer/:id" element={<InfluencerDetailPage />} />
       <Route path="/SearchInfluencersPage" element={<SearchInfluencersPage />} />
+      <Route path="/ConversationList" element={<ConversationListPage />} />
+      <Route path="/conversations/:conversationId" element={<ChatPage />} />
+
 
     </Routes>
   )

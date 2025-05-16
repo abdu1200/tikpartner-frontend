@@ -76,7 +76,7 @@ const BrowseInfluencersPage = () => {
                 <FileText className="w-5 h-5 mr-1" />
                 <span>Contracts</span>
               </Link>
-              <Link to="/messages" className="flex items-center text-gray-500">
+              <Link to="/ConversationList" className="flex items-center text-gray-500">
                 <MessageCircle className="w-5 h-5 mr-1" />
                 <span>Message</span>
               </Link>
@@ -111,7 +111,7 @@ const BrowseInfluencersPage = () => {
               <FileText className="w-6 h-6 mr-3" />
               <span>Contracts</span>
             </Link>
-            <Link to="/messages" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+            <Link to="/ConversationList" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
               <MessageCircle className="w-6 h-6 mr-3" />
               <span>Message</span>
             </Link>
