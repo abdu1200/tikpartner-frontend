@@ -1,6 +1,6 @@
 import { useState } from "react";
 import React from "react";
-import backendUrl from "../utils/backendUrl";
+import backendUrl from "../../utils/backendUrl";
 
 function MessageList({ messages, currentUser, conversationId, onDelete, onEdit, readMessages }) {
   const [openMenuId, setOpenMenuId] = useState(null); //to open the menu

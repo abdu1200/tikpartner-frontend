@@ -45,6 +45,7 @@ export default function LoginForm() {
       localStorage.setItem('accessToken', response.data.access);     // localStorage is a built-in Web API available globally in browsers, and a frontend code has access to the localStorage since the frontend code runs on the browser, unlike server codes like django who runs on a server machine
       localStorage.setItem('refreshToken', response.data.refresh);
       localStorage.setItem('user', JSON.stringify(response.data.profile.user));
+      localStorage.setItem('profile', JSON.stringify(response.data.profile));
       
       console.log('Login successful', response.data);
       // alert('Login successful!');

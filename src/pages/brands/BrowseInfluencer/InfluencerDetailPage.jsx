@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Heart } from 'lucide-react';
+import { Heart, ChevronLeft } from 'lucide-react';
 import { useParams, useNavigate } from 'react-router-dom';
 import backendUrl from '../../../utils/backendUrl';
 import tiktokIcon from '../../../assets/tiktok.png';
@@ -41,9 +41,10 @@ const InfluencerDetailPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-pink-50">
-        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-pink-500"></div>
-      </div>
+        <div className="flex flex-col justify-center items-center h-screen space-y-4 bg-pink-50">
+          <p className="text-gray-600 text-sm">Loading influencer details...</p>
+          <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
+        </div>
     );
   }
 
@@ -97,7 +98,13 @@ const InfluencerDetailPage = () => {
 
   return (
     <div className="flex flex-col min-h-screen bg-white font-outfit">
-      <header className="p-4 bg-white sticky top-0 z-20 flex items-center  border-b border-pink-300">
+      <header className="p-4 bg-white sticky top-0 z-20 flex items-center border-b border-pink-300">
+        <button 
+           onClick={() => navigate(-1)} 
+           className="flex items-center mr-2 cursor-pointer"
+        >
+          <ChevronLeft size={20} />
+        </button>
         <h1 className="text-lg text-pink-600 font-medium flex-grow">{influencer.display_name}</h1>
         <button  onClick={handleFavoriteClick}>
           <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'}`} />
@@ -195,8 +202,11 @@ const InfluencerDetailPage = () => {
             </button>
 
             <div className="flex gap-2">
-              <button className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 cursor-pointer">
-                Hire
+              <button 
+                className="flex-1 bg-pink-600 text-white py-3 rounded-lg font-medium hover:bg-pink-700 cursor-pointer"
+                onClick={() => navigate(`/SendContract/${influencer.id}`, { state: { influencer } })}
+                >
+                Hire/ New Contract
               </button>
               <button 
                 className="flex-1 border border-pink-600 text-pink-600 py-3 rounded-lg font-medium hover:bg-gray-50 cursor-pointer"

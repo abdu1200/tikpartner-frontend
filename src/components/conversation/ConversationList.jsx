@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import backendUrl from '../utils/backendUrl';
+import backendUrl from '../../utils/backendUrl';
 import { Link } from 'react-router-dom';
 
 function ConversationList() {

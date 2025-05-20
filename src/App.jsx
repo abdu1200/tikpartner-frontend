@@ -14,10 +14,13 @@ import BrowseInfluencersPage from './pages/brands/BrowseInfluencer/BrowseInfluen
 import InfluencerDetailPage from './pages/brands/BrowseInfluencer/InfluencerDetailPage'
 import SearchInfluencersPage from './pages/brands/SearchInfluencer/SearchInfluencersPage'
 
-import ConversationListPage from './components/ConversationList'
-import ChatPage from './components/Chat'
+import ConversationListPage from './components/conversation/ConversationList'
+import ChatPage from './components/conversation/Chat'
 
-
+import SendContractPage from './pages/brands/contract/SendContract'
+import ContractsPage from './pages/brands/contract/Contracts'
+import RequestedOffersList from './pages/brands/contract/offers/RequestedOffersList'
+import RequestedOffersDetail from './pages/brands/contract/offers/RequestedOfferDetail'
 
 
 
@@ -41,6 +44,10 @@ function App() {
       <Route path="/SearchInfluencersPage" element={<SearchInfluencersPage />} />
       <Route path="/ConversationList" element={<ConversationListPage />} />
       <Route path="/conversations/:conversationId" element={<ChatPage />} />
+      <Route path="/SendContract/:id" element={<SendContractPage />} />
+      <Route path="/Contracts" element={<ContractsPage />} />
+      <Route path="/RequestedOffersList" element={<RequestedOffersList />} />
+      <Route path="/offer/:id" element={<RequestedOffersDetail />} />
 
 
     </Routes>

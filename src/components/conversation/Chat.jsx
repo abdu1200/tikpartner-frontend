@@ -4,7 +4,7 @@ import MessageList from './MessageList';
 import MessageInput from './MessageInput';
 import ChatHeader from './ChatHeader';
 import { useParams } from 'react-router-dom';
-import backendUrl from '../utils/backendUrl';
+import backendUrl from '../../utils/backendUrl';
 
 function Chat() {
     const [messages, setMessages] = useState([]);
