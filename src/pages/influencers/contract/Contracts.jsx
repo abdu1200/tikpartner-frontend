@@ -8,9 +8,9 @@ const Contracts = () => {
     const navigate = useNavigate();
     
     const menuItems = [
-      { path: '/RequestedOffersList', icon: <FileText size={20} />, label: 'Requested Offers' },
-      { path: '/AcceptedOffersList', icon: <FileText size={20} />, label: 'Accepted Offers' },
-      { path: '/ActiveContractsList', icon: <Briefcase size={20} />, label: 'Active contracts' },
+      { path: '/InfRequestedOffersList', icon: <FileText size={20} />, label: 'Requested Offers' },
+      { path: '/InfAcceptedOffersList', icon: <FileText size={20} />, label: 'Accepted Offers' },
+      { path: '/InfActiveContractsList', icon: <Briefcase size={20} />, label: 'Active contracts' },
       { path: '/approve-work', icon: <CheckSquare size={20} />, label: 'Approve work' },
       { path: '/ended-contracts', icon: <Archive size={20} />, label: 'Ended contract' },
     ];
@@ -25,7 +25,7 @@ const Contracts = () => {
         {/* Header */}
         <div className="flex justify-between items-center p-4 border-b mb-5 bg-pink-100">
           <div className="flex items-center space-x-2">
-            <button onClick={() => navigate('/BrowseInfluencersPage')} className="flex items-center mr-2 cursor-pointer">
+            <button onClick={() => navigate('/WelcomePage')} className="flex items-center mr-2 cursor-pointer">
               <ChevronLeft size={20} />
             </button>
             <h1 className="text-lg font-medium">Contracts</h1>

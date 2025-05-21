@@ -19,8 +19,23 @@ import ChatPage from './components/conversation/Chat'
 
 import SendContractPage from './pages/brands/contract/SendContract'
 import ContractsPage from './pages/brands/contract/Contracts'
-import RequestedOffersList from './pages/brands/contract/offers/RequestedOffersList'
-import RequestedOffersDetail from './pages/brands/contract/offers/RequestedOfferDetail'
+import RequestedOffersList from './pages/brands/contract/requestedOffers/RequestedOffersList'
+import RequestedOfferDetail from './pages/brands/contract/requestedOffers/RequestedOfferDetail'
+import AcceptedOffersList from './pages/brands/contract/acceptedOffers/AcceptedOffersList'
+import AcceptedOfferDetail from './pages/brands/contract/acceptedOffers/AcceptedOfferDetail'
+import ActiveContractsList from './pages/brands/contract/activeContracts/ActiveContractsList'
+import ActiveContractDetail from './pages/brands/contract/activeContracts/ActiveContractDetail'
+
+
+
+import WelcomePage from './pages/influencers/WelcomePage'
+import InfContractsPage from './pages/influencers/contract/Contracts'
+import InfRequestedOffersList from './pages/influencers/contract/requestedOffers/RequestedOffersList'
+import InfRequestedOfferDetail from './pages/influencers/contract/requestedOffers/RequestedOfferDetail'
+import InfAcceptedOffersList from './pages/influencers/contract/acceptedOffers/AcceptedOffersList'
+import InfAcceptedOfferDetail from './pages/influencers/contract/acceptedOffers/AcceptedOfferDetail'
+import InfActiveContractsList from './pages/influencers/contract/activeContracts/ActiveContractsList'
+import InfActiveContractDetail from './pages/influencers/contract/activeContracts/ActiveContractDetail'
 
 
 
@@ -39,15 +54,33 @@ function App() {
       <Route path="/InfluencerSignup" element={<InfluencerSignupForm />} />
       <Route path="/InfluencerLogin" element={<InfluencerLoginForm />} />
       <Route path="/InfluencerPasswordReset" element={<InfluencerPasswordReset />} />
+      
       <Route path="/BrowseInfluencersPage" element={<BrowseInfluencersPage />} />
       <Route path="/influencer/:id" element={<InfluencerDetailPage />} />
       <Route path="/SearchInfluencersPage" element={<SearchInfluencersPage />} />
+      
+      <Route path="/WelcomePage" element={<WelcomePage />} />
+      
       <Route path="/ConversationList" element={<ConversationListPage />} />
       <Route path="/conversations/:conversationId" element={<ChatPage />} />
+      
       <Route path="/SendContract/:id" element={<SendContractPage />} />
       <Route path="/Contracts" element={<ContractsPage />} />
       <Route path="/RequestedOffersList" element={<RequestedOffersList />} />
-      <Route path="/offer/:id" element={<RequestedOffersDetail />} />
+      <Route path="/RequestedOffer/:id" element={<RequestedOfferDetail />} />
+      <Route path="/AcceptedOffersList" element={<AcceptedOffersList />} />
+      <Route path="/AcceptedOffer/:id" element={<AcceptedOfferDetail />} />
+      <Route path="/ActiveContractsList" element={<ActiveContractsList />} />
+      <Route path="/ActiveContract/:id" element={<ActiveContractDetail />} />
+
+
+      <Route path="/InfContracts" element={<InfContractsPage />} />
+      <Route path="/InfRequestedOffersList" element={<InfRequestedOffersList />} />
+      <Route path="/InfRequestedOffer/:id" element={<InfRequestedOfferDetail />} />
+      <Route path="/InfAcceptedOffersList" element={<InfAcceptedOffersList />} />
+      <Route path="/InfAcceptedOffer/:id" element={<InfAcceptedOfferDetail />} />
+      <Route path="/InfActiveContractsList" element={<InfActiveContractsList />} />
+      <Route path="/InfActiveContract/:id" element={<InfActiveContractDetail />} />
 
 
     </Routes>

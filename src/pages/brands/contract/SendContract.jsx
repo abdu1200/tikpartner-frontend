@@ -72,7 +72,7 @@ export default function SendContract() {
       const response = await backendUrl.post('/api/contracts/', payload);
       console.log('Contract created:', response.data);
       //alert('Contract submitted successfully!');
-      navigate(`/offer/${response.data.id}`);  //navigate to RequestedOfferDetail page
+      navigate(`/RequestedOffer/${response.data.id}`);  //navigate to RequestedOfferDetail page
     } catch (error) {
       setError('Failed to create a contract. Please try again later.');
       console.error('Error submitting contract:', error.response?.data);

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, MoreVertical } from "lucide-react";
 import backendUrl from "../../../../utils/backendUrl";
-import OfferCard from "./OfferCard";
-import { Navigate, useNavigate } from "react-router-dom";
+import OfferCard from "./RequestedOfferCard";
+import { useNavigate } from "react-router-dom";
 
 const RequestedOffersList = () => {
     const [offers, setOffers] = useState([]);
@@ -50,7 +50,7 @@ const RequestedOffersList = () => {
        <div className="w-full md:max-w-lg lg:max-w-xl md:my-10 md:shadow-lg md:rounded-lg md:overflow-hidden bg-pink-50">
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-200 bg-pink-100">
-          <button onClick={() => navigate('/Contracts')} className="flex items-center mr-2 cursor-pointer">
+          <button onClick={() => navigate('/InfContracts')} className="flex items-center mr-2 cursor-pointer">
             <ChevronLeft size={20} />
           </button>
           <span className="text-base ml-1">Requested Offers</span>
@@ -62,7 +62,7 @@ const RequestedOffersList = () => {
         {/* Content */}
         <div className="flex-1 overflow-y-auto">
           {offers.length === 0 ? (
-            <div className="bg-red-100 border border-red-400 px-4 py-3 rounded text-center">No offers available</div>
+            <div className="bg-red-100 text-red-700 border border-red-400 m-5 px-4 py-3 rounded text-center">No offers available</div>
           ) : (
             offers.map((offer) => (
               <OfferCard 

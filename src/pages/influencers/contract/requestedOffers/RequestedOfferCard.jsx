@@ -13,7 +13,7 @@ const OfferCard = ({ offer }) => {
     };
 
     const handleCardClick = () => {
-        navigate(`/offer/${offer.id}`);
+        navigate(`/InfRequestedOffer/${offer.id}`);
     };
     
 
@@ -29,7 +29,7 @@ const OfferCard = ({ offer }) => {
               Sent on {formatDate(offer.brand_signed_at)}
             </p>
             <p className="text-sm text-gray-500 mt-1">
-              To influencer: {offer.influencer_name}
+              from brand: {offer.brand_name}
             </p>
           </div>
           <ChevronLeft className="text-gray-400 rotate-180" size={20} />

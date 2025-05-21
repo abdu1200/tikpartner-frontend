@@ -49,7 +49,7 @@ const OfferDetailPage = () => {
 
       } catch (error) {
         console.error('Error cancelling offer:', error.response?.data || error.message);
-        setError('Failed to load request offer details. Please try again later.');
+        setError('Failed to cancel requested offer. Please try again later.');
 
       } finally {
         setIsCancelling(false);

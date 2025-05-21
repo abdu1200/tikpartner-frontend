@@ -50,7 +50,7 @@ export default function LoginForm() {
       console.log('Login successful', response.data);
       // alert('Login successful!');
       
-      navigate('/ConversationList');
+      navigate('/WelcomePage');
 
       
     } catch (error) {
