@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, MoreVertical } from "lucide-react";
+import { ChevronLeft, MoreVertical, X, Plus, Trash2 } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import backendUrl from "../../../../utils/backendUrl";
 
@@ -8,9 +8,15 @@ const ContractDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { id } = useParams();
-    const navigate = ActiveContractsList();
+    const navigate = useNavigate();
     const [isCancelling, setIsCancelling] = useState(false);
-  
+    
+    // Submission modal states
+    const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [selectedFiles, setSelectedFiles] = useState([]);
+    const [contentUrls, setContentUrls] = useState(['']);
+    const [submissionError, setSubmissionError] = useState(null);
     
     useEffect(() => {
         const fetchRequestedContractDetail = async () => {
@@ -35,7 +41,6 @@ const ContractDetailPage = () => {
         return `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
     };
 
-
     const handleCancel = async (id) => {
       setIsCancelling(true);
       setError(null)
@@ -55,9 +60,100 @@ const ContractDetailPage = () => {
         setIsCancelling(false);
       }
     };
-    
 
-  
+    const handleFileChange = (e) => {
+        setSelectedFiles(Array.from(e.target.files));
+    };
+
+    const handleUrlChange = (index, value) => {
+        const newUrls = [...contentUrls];
+        newUrls[index] = value;
+        setContentUrls(newUrls);
+    };
+
+    const addUrlField = () => {
+        setContentUrls([...contentUrls, '']);
+    };
+
+    const removeUrlField = (index) => {
+        if (contentUrls.length > 1) {
+            const newUrls = contentUrls.filter((_, i) => i !== index);
+            setContentUrls(newUrls);
+        }
+    };
+
+    const handleSubmitDeliverable = async (e) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+        setSubmissionError(null);
+
+        try {
+            const formData = new FormData();
+            
+            // Add files to form data
+            for (const file of selectedFiles) {
+                formData.append("content_files", file);
+            }
+            
+            // Add URLs to form data (filter out empty URLs)
+            const validUrls = contentUrls.filter(url => url.trim() !== '');
+            for (const url of validUrls) {
+                formData.append("content_urls", url);
+            }
+
+            // Check if at least one file or URL is provided
+            if (selectedFiles.length === 0 && validUrls.length === 0) {
+                setSubmissionError("At least one file or URL must be provided.");
+                setIsSubmitting(false);
+                return;
+            }
+
+            const response = await backendUrl.post(
+                `/api/deliverables/${contract.deliverable_id}/submit_attachments/`, 
+                formData, 
+                {
+                    headers: { 
+                        "Content-Type": "multipart/form-data" 
+                    }
+                }
+            );
+
+            console.log('Deliverable submitted successfully:', response.data);
+            alert("Deliverable submitted successfully!");
+            setShowSubmissionModal(false);
+            
+            // Reset form
+            setSelectedFiles([]);
+            setContentUrls(['']);
+            
+            // Optionally navigate back or refresh data
+            //navigate('/ActiveContractsList');
+
+        } catch (error) {
+            console.error('Error submitting deliverable:', error.response?.data || error.message);
+            setSubmissionError(
+                error.response?.data?.error || 
+                'Failed to submit deliverable. Please try again later.'
+            );
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    const openSubmissionModal = () => {
+        setShowSubmissionModal(true);
+        setSubmissionError(null);
+        setSelectedFiles([]);
+        setContentUrls(['']);
+    };
+
+    const closeSubmissionModal = () => {
+        setShowSubmissionModal(false);
+        setSubmissionError(null);
+        setSelectedFiles([]);
+        setContentUrls(['']);
+    };
+    
     if (loading) {
       return (
         <div className="flex flex-col justify-center items-center h-screen space-y-4 bg-pink-50">
@@ -133,24 +229,16 @@ const ContractDetailPage = () => {
           
           
           <div className="mb-6">
-            <div className="text-sm text-gray-500">From brand:</div>
+            <div className="text-sm text-gray-500">To influencer:</div>
             <div className="flex items-center mt-2">
-              <span className="text-base">{contract.brand_name}</span>
+              <span className="text-base">{contract.influencer_name}</span>
             </div>
           </div>
         </div>
         
         {/* Buttons */}
         <div className="p-4">
-          <button 
-           onClick={() => navigate('/InfActiveContractsList')} 
-           className="w-full py-3 px-4 border border-gray-300 text-gray-700 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
-           disabled={isCancelling}
-           > 
-            Go back
-          </button>
-          
-          <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
+          <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium cursor-pointer mb-2">
             {isCancelling ? (
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -163,7 +251,132 @@ const ContractDetailPage = () => {
                   'Cancel Contract'
                 )}
           </button>
+
+          <button 
+           onClick={openSubmissionModal}
+           className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
+           disabled={isCancelling}
+           > 
+            Submit Deliverable(s)
+          </button>
         </div>
+
+        {/* Submission Modal */}
+        {showSubmissionModal && (
+          <div className="fixed absolute inset-0 backdrop-blur-xs bg-opacity-30 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-md max-h-screen overflow-y-auto">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold">Submit Deliverable(s)</h2>
+                <button 
+                  onClick={closeSubmissionModal}
+                  className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
+                  disabled={isSubmitting}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <form onSubmit={handleSubmitDeliverable} encType="multipart/form-data" className="p-4">
+                {submissionError && (
+                  <div className="mb-4 bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm">
+                    {submissionError}
+                  </div>
+                )}
+
+                {/* File Upload Section */}
+                <div className="mb-6">
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Upload Files (Optional)
+                  </label>
+                  <input
+                    type="file"
+                    multiple
+                    onChange={handleFileChange}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 cursor-pointer"
+                    disabled={isSubmitting}
+                  />
+                  {selectedFiles.length > 0 && (
+                    <div className="mt-2 text-sm text-gray-600">
+                      {selectedFiles.length} file(s) selected
+                    </div>
+                  )}
+                </div>
+
+                {/* URL Section */}
+                <div className="mb-6">
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="block text-sm font-medium text-gray-700">
+                      Add Content URLs (Optional)
+                    </label>
+                    <button
+                      type="button"
+                      onClick={addUrlField}
+                      className="flex items-center text-sm text-pink-600 hover:text-pink-700 cursor-pointer"
+                      disabled={isSubmitting}
+                    >
+                      <Plus size={16} className="mr-1" />
+                      Add URL
+                    </button>
+                  </div>
+                  
+                  {contentUrls.map((url, index) => (
+                    <div key={index} className="flex items-center mb-2">
+                      <input
+                        type="url"
+                        value={url}
+                        onChange={(e) => handleUrlChange(index, e.target.value)}
+                        placeholder="https://example.com"
+                        className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                        disabled={isSubmitting}
+                      />
+                      {contentUrls.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => removeUrlField(index)}
+                          className="ml-2 p-1 text-red-600 hover:text-red-700"
+                          disabled={isSubmitting}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Modal Buttons */}
+                <div className="flex space-x-3">
+                  <button
+                    type="button"
+                    onClick={closeSubmissionModal}
+                    className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
+                    disabled={isSubmitting}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-2 px-4 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-200 disabled:opacity-50 cursor-pointer"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Submitting...
+                      </div>
+                    ) : (
+                      'Submit'
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
       </div>
      </div>
     );

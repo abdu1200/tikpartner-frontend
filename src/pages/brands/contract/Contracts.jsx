@@ -11,7 +11,7 @@ const Contracts = () => {
       { path: '/RequestedOffersList', icon: <FileText size={20} />, label: 'Requested Offers' },
       { path: '/AcceptedOffersList', icon: <FileText size={20} />, label: 'Accepted Offers' },
       { path: '/ActiveContractsList', icon: <Briefcase size={20} />, label: 'Active contracts' },
-      { path: '/approve-work', icon: <CheckSquare size={20} />, label: 'Approve work' },
+      { path: '/ApproveWorksList', icon: <CheckSquare size={20} />, label: 'Approve work' },
       { path: '/ended-contracts', icon: <Archive size={20} />, label: 'Ended contract' },
     ];
   

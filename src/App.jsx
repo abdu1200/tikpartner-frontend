@@ -25,6 +25,8 @@ import AcceptedOffersList from './pages/brands/contract/acceptedOffers/AcceptedO
 import AcceptedOfferDetail from './pages/brands/contract/acceptedOffers/AcceptedOfferDetail'
 import ActiveContractsList from './pages/brands/contract/activeContracts/ActiveContractsList'
 import ActiveContractDetail from './pages/brands/contract/activeContracts/ActiveContractDetail'
+import ApproveWorksList from './pages/brands/contract/approveWorks/ApproveWorksList'
+import ApproveWorkDetail from './pages/brands/contract/approveWorks/ApproveWorkDetail'
 
 
 
@@ -72,6 +74,8 @@ function App() {
       <Route path="/AcceptedOffer/:id" element={<AcceptedOfferDetail />} />
       <Route path="/ActiveContractsList" element={<ActiveContractsList />} />
       <Route path="/ActiveContract/:id" element={<ActiveContractDetail />} />
+      <Route path="/ApproveWorksList" element={<ApproveWorksList />} />
+      <Route path="/ApproveWork/:id" element={<ApproveWorkDetail />} />
 
 
       <Route path="/InfContracts" element={<InfContractsPage />} />

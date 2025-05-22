@@ -142,6 +142,7 @@ const ContractDetailPage = () => {
         
         {/* Buttons */}
         <div className="p-4">
+
           <button 
            onClick={() => navigate('/ActiveContractsList')} 
            className="w-full py-3 px-4 border border-gray-300 text-gray-700 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
@@ -149,7 +150,7 @@ const ContractDetailPage = () => {
            > 
             Go back
           </button>
-          
+
           <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
             {isCancelling ? (
                   <div className="flex items-center justify-center">
