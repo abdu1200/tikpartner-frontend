@@ -115,6 +115,13 @@ const OfferDetailPage = () => {
             <div className="text-sm text-gray-500">Contract title</div>
             <div className="text-base mt-1">{offer.title}</div>
           </div>
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">From brand:</div>
+            <div className="flex items-center mt-2">
+              <span className="text-base">{offer.brand_name}</span>
+            </div>
+          </div>
           
           <div className="mb-6">
             <div className="text-sm text-gray-500">Payment Amount</div>
@@ -136,13 +143,6 @@ const OfferDetailPage = () => {
             <div className="text-base mt-1">{offer.deliverable_description || "No description"} </div>
           </div>
           
-          
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">From brand:</div>
-            <div className="flex items-center mt-2">
-              <span className="text-base">{offer.brand_name}</span>
-            </div>
-          </div>
         </div>
         
         {/* Buttons */}

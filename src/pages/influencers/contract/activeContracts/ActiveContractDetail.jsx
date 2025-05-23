@@ -10,6 +10,8 @@ const ContractDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isCancelling, setIsCancelling] = useState(false);
+    const [isUpdate, setIsUpdate] = useState(false);
+
     
     // Submission modal states
     const [showSubmissionModal, setShowSubmissionModal] = useState(false);
@@ -108,26 +110,45 @@ const ContractDetailPage = () => {
                 return;
             }
 
-            const response = await backendUrl.post(
-                `/api/deliverables/${contract.deliverable_id}/submit_attachments/`, 
-                formData, 
-                {
-                    headers: { 
-                        "Content-Type": "multipart/form-data" 
-                    }
-                }
-            );
-
-            console.log('Deliverable submitted successfully:', response.data);
-            alert("Deliverable submitted successfully!");
-            setShowSubmissionModal(false);
-            
-            // Reset form
-            setSelectedFiles([]);
-            setContentUrls(['']);
-            
-            // Optionally navigate back or refresh data
-            //navigate('/ActiveContractsList');
+            if (contract.deliverable_status === "submitted" || isUpdate) {
+              const response = await backendUrl.put(
+                  `/api/deliverables/${contract.deliverable_id}/update_attachments/`, 
+                  formData, 
+                  {
+                      headers: { 
+                          "Content-Type": "multipart/form-data" 
+                      }
+                  }
+              );
+          
+              console.log('Deliverable updated successfully:', response.data);
+              alert("Deliverable updated successfully!");
+              setShowSubmissionModal(false);
+          
+              // Reset form
+              setSelectedFiles([]);
+              setContentUrls(['']);
+              
+          } else {
+              const response = await backendUrl.post(
+                  `/api/deliverables/${contract.deliverable_id}/submit_attachments/`, 
+                  formData, 
+                  {
+                      headers: { 
+                          "Content-Type": "multipart/form-data" 
+                      }
+                  }
+              );
+          
+              console.log('Deliverable submitted successfully:', response.data);
+              alert("Deliverable submitted successfully!");
+              setIsUpdate(true);
+              setShowSubmissionModal(false);
+          
+              // Reset form
+              setSelectedFiles([]);
+              setContentUrls(['']);
+          }
 
         } catch (error) {
             console.error('Error submitting deliverable:', error.response?.data || error.message);
@@ -206,6 +227,13 @@ const ContractDetailPage = () => {
             <div className="text-sm text-gray-500">Contract title</div>
             <div className="text-base mt-1">{contract.title}</div>
           </div>
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">From brand:</div>
+            <div className="flex items-center mt-2">
+              <span className="text-base">{contract.brand_name}</span>
+            </div>
+          </div>
           
           <div className="mb-6">
             <div className="text-sm text-gray-500">Payment Amount</div>
@@ -227,18 +255,15 @@ const ContractDetailPage = () => {
             <div className="text-base mt-1">{contract.deliverable_description || "No description"} </div>
           </div>
           
-          
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">To influencer:</div>
-            <div className="flex items-center mt-2">
-              <span className="text-base">{contract.influencer_name}</span>
-            </div>
-          </div>
         </div>
         
         {/* Buttons */}
         <div className="p-4">
-          <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium cursor-pointer mb-2">
+          <button 
+           onClick={() => handleCancel(id)} 
+           className="w-full py-3 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium cursor-pointer mb-2"
+           disabled={contract.deliverable_status == "submitted" || isUpdate}
+           >
             {isCancelling ? (
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -257,7 +282,7 @@ const ContractDetailPage = () => {
            className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
            disabled={isCancelling}
            > 
-            Submit Deliverable(s)
+            {contract.deliverable_status == "submitted" || isUpdate ? 'Update Deliverable(s)' : 'Submit Deliverable(s)' } 
           </button>
         </div>
 
@@ -267,7 +292,7 @@ const ContractDetailPage = () => {
             <div className="bg-white rounded-lg w-full max-w-md max-h-screen overflow-y-auto">
               {/* Modal Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold">Submit Deliverable(s)</h2>
+                <h2 className="text-lg font-semibold">{contract.deliverable_status === "submitted" || isUpdate? 'Update Deliverable(s)':'Submit Deliverable(s)'}</h2>
                 <button 
                   onClick={closeSubmissionModal}
                   className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
@@ -366,10 +391,10 @@ const ContractDetailPage = () => {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        Submitting...
+                        {contract.deliverable_status === "submitted" || isUpdate? 'Updating':'Submitting'}
                       </div>
                     ) : (
-                      'Submit'
+                      contract.deliverable_status === "submitted" || isUpdate? 'Update':'Submit'
                     )}
                   </button>
                 </div>

@@ -19,7 +19,7 @@ const ContractDetailPage = () => {
   
     
     useEffect(() => {
-        const fetchRequestedContractDetail = async () => {
+        const fetchApproveContractDetail = async () => {
           try {
             const response = await backendUrl.get(`/api/approve_works/${id}/`);
             setContract(response.data);
@@ -31,7 +31,7 @@ const ContractDetailPage = () => {
           }
         };
     
-        fetchRequestedContractDetail();
+        fetchApproveContractDetail();
      }, [id]);    
     
 
@@ -162,7 +162,7 @@ const ContractDetailPage = () => {
           </button>
           <span className="text-base ml-1">View contract</span>
           <div className="ml-auto text-xs text-gray-400">
-            Sent on {formatDate(contract.brand_signed_at)}
+            Submitted at {formatDate(contract.deliverable_submitted_at)}
           </div>
           <div className="ml-2">
             <MoreVertical size={20} />
@@ -174,6 +174,13 @@ const ContractDetailPage = () => {
           <div className="mb-6">
             <div className="text-sm text-gray-500">Contract title</div>
             <div className="text-base mt-1">{contract.title}</div>
+          </div>
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">To influencer:</div>
+            <div className="flex items-center mt-2">
+              <span className="text-base">{contract.influencer_name}</span>
+            </div>
           </div>
           
           <div className="mb-6">
@@ -201,12 +208,6 @@ const ContractDetailPage = () => {
             <div className="text-base mt-1">{formatDate(contract.deliverable_submitted_at)} </div>
           </div>
           
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">To influencer:</div>
-            <div className="flex items-center mt-2">
-              <span className="text-base">{contract.influencer_name}</span>
-            </div>
-          </div>
         </div>
         
         {/* Buttons */}
@@ -288,7 +289,7 @@ const ContractDetailPage = () => {
                                     </div>
                                     <div>
                                       <div className="text-sm font-medium text-gray-900">
-                                        {getFileName(attachment.file)}
+                                        {attachment.original_filename} {/* it was {getFileName(attachment.file)} */}
                                       </div>
                                       <div className="text-xs text-gray-500">File attachment</div>
                                     </div>
@@ -305,7 +306,7 @@ const ContractDetailPage = () => {
                                     </a>
                                     <button
                                       onClick={() => handleDownload(attachment.file, attachment.original_filename)}
-                                      className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                                      className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors cursor-pointer"
                                       title="Download file"
                                     >
                                       <Download size={16} />
@@ -334,7 +335,7 @@ const ContractDetailPage = () => {
                                     className="p-2 text-blue-600 hover:bg-blue-50 rounded-md transition-colors"
                                     title="Visit URL"
                                   >
-                                    <ExternalLink size={16} />
+                                    <ExternalLink size={16} /> 
                                   </a>
                                 </div>
                               )}

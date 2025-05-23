@@ -8,7 +8,7 @@ const ContractDetailPage = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { id } = useParams();
-    const navigate = ActiveContractsList();
+    const navigate = useNavigate();
     const [isCancelling, setIsCancelling] = useState(false);
   
     
@@ -112,6 +112,13 @@ const ContractDetailPage = () => {
           </div>
           
           <div className="mb-6">
+            <div className="text-sm text-gray-500">To influencer:</div>
+            <div className="flex items-center mt-2">
+              <span className="text-base">{contract.influencer_name}</span>
+            </div>
+          </div>
+
+          <div className="mb-6">
             <div className="text-sm text-gray-500">Payment Amount</div>
             <div className="text-base mt-1">$ {contract.payment_amount}</div>
           </div>
@@ -131,13 +138,6 @@ const ContractDetailPage = () => {
             <div className="text-base mt-1">{contract.deliverable_description || "No description"} </div>
           </div>
           
-          
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">To influencer:</div>
-            <div className="flex items-center mt-2">
-              <span className="text-base">{contract.influencer_name}</span>
-            </div>
-          </div>
         </div>
         
         {/* Buttons */}
