@@ -54,7 +54,7 @@ export default function LoginForm() {
 
       
     } catch (error) {
-      console.log('Login error:', error);
+      console.log('Login error:', error.response?.data);
       // Handle error - show error message to user
 
       setError(

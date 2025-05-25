@@ -19,7 +19,7 @@ const BrowseInfluencersPage = () => {
         setInfluencers(response.data);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching influencers:', error);
+        console.error('Error fetching influencers:', error.response?.data);
         setError('Failed to load influencers. Please try again later.');
         setLoading(false);
       }

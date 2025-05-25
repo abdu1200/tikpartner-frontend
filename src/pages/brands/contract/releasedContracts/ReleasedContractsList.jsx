@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, MoreVertical } from "lucide-react";
 import backendUrl from "../../../../utils/backendUrl";
-import ContractCard from "./ActiveContractCard";
+import ReleasedContractCard from "./ReleasedContractCard";
 import { useNavigate } from "react-router-dom";
 
 const ActiveContractsList = () => {
@@ -11,19 +11,19 @@ const ActiveContractsList = () => {
     const navigate = useNavigate();
     
     useEffect(() => {
-        const fetchActiveContracts = async () => {
+        const fetchReleasedContracts = async () => {
           try {
-            const response = await backendUrl.get('/api/active_contracts_brand/');
+            const response = await backendUrl.get('/api/released_contracts/');
             setContracts(response.data);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching active contracts:', error.response?.data);
-            setError('Failed to load active contracts. Please try again later.');
+            console.error('Error fetching released contracts:', error.response?.data);
+            setError('Failed to load released contracts. Please try again later.');
             setLoading(false);
           }
         };
     
-        fetchActiveContracts();
+        fetchReleasedContracts();
       }, []);
     
 
@@ -31,7 +31,7 @@ const ActiveContractsList = () => {
     if (loading) {
       return (
         <div className="flex flex-col justify-center items-center h-screen space-y-4 bg-pink-50">
-          <p className="text-gray-600 text-sm">Loading active contracts...</p>
+          <p className="text-gray-600 text-sm">Loading released contracts...</p>
           <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       );
@@ -53,7 +53,7 @@ const ActiveContractsList = () => {
           <button onClick={() => navigate('/Contracts')} className="flex items-center mr-2 cursor-pointer">
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">Active Contracts</span>
+          <span className="text-base ml-1">Released Contracts</span>
           <div className="ml-auto">
             <MoreVertical size={20} />
           </div>
@@ -65,7 +65,7 @@ const ActiveContractsList = () => {
             <div className="bg-red-100 border border-red-400 text-red-700 m-5 px-4 py-3 rounded text-center">No contracts available</div>
           ) : (
             contracts.map((contract) => (
-              <ContractCard 
+              <ReleasedContractCard 
                 key={contract.id} 
                 contract={contract} 
               />

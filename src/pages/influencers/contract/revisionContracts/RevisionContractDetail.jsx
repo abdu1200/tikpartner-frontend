@@ -10,7 +10,6 @@ const ContractDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
     const [isCancelling, setIsCancelling] = useState(false);
-    const [isUpdate, setIsUpdate] = useState(false);
 
     
     // Submission modal states
@@ -21,19 +20,19 @@ const ContractDetailPage = () => {
     const [submissionError, setSubmissionError] = useState(null);
     
     useEffect(() => {
-        const fetchRequestedContractDetail = async () => {
+        const fetchRevisionContractDetail = async () => {
           try {
-            const response = await backendUrl.get(`/api/active_contracts/${id}/`);
+            const response = await backendUrl.get(`/api/contracts_on_revision/${id}/`);
             setContract(response.data);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching active contract details:', error.response?.data);
-            setError('Failed to load active contract details. Please try again later.');
+            console.error('Error fetching contract details:', error.response?.data);
+            setError('Failed to load contract details. Please try again later.');
             setLoading(false);
           }
         };
     
-        fetchRequestedContractDetail();
+        fetchRevisionContractDetail();
      }, [id]);    
     
 
@@ -48,11 +47,11 @@ const ContractDetailPage = () => {
       setError(null)
 
       try {
-        const response = await backendUrl.delete(`/api/active_contracts/${id}/`);
+        const response = await backendUrl.delete(`/api/contracts_on_revision/${id}/`);
         console.log('Contract cancelled successfully:', response.data);
         
         alert("Contract cancelled successfully");
-        navigate('/InfActiveContractsList');
+        navigate('/InfRevisionContractsList');
 
       } catch (error) {
         console.error('Error cancelling contract:', error.response?.data || error.message);
@@ -90,81 +89,60 @@ const ContractDetailPage = () => {
         setSubmissionError(null);
 
         try {
-            const formData = new FormData();
-            
-            // Add files to form data
-            for (const file of selectedFiles) {
-                formData.append("content_files", file);
-            }
-            
-            // Add URLs to form data (filter out empty URLs)
-            const validUrls = contentUrls.filter(url => url.trim() !== '');
-            for (const url of validUrls) {
-                formData.append("content_urls", url);
-            }
-
-            // Check if at least one file or URL is provided
-            if (selectedFiles.length === 0 && validUrls.length === 0) {
-                setSubmissionError("At least one file or URL must be provided.");
-                setIsSubmitting(false);
-                return;
-            }
-
-            if (contract.deliverable_status === "submitted" || isUpdate) {
-
-              const response = await backendUrl.put(
-                  `/api/deliverables/${contract.deliverable_id}/update_attachments/`, 
-                  formData, 
-                  {
-                      headers: { 
-                          "Content-Type": "multipart/form-data" 
-                      }
-                  }
-              );
-              console.log('Deliverable updated successfully:', response.data);
-              alert("Deliverable updated successfully!");
-
-              //also updating resubmitted at
-              const responsePatch = await backendUrl.patch(
-                `/api/deliverables/${contract.deliverable_id}/`,
-                { 
-                  resubmitted_at: new Date().toISOString(),  // Send current timestamp in ISO format
-                }
-              );
-              console.log("deliverable resubmitted_at updated to approved successfully", responsePatch.data);
-
-              
-              setShowSubmissionModal(false);
-              // Reset form
-              setSelectedFiles([]);
-              setContentUrls(['']);
-              
-          } else {
-              const response = await backendUrl.post(
-                  `/api/deliverables/${contract.deliverable_id}/submit_attachments/`, 
-                  formData, 
-                  {
-                      headers: { 
-                          "Content-Type": "multipart/form-data" 
-                      }
-                  }
-              );
+          const formData = new FormData();
           
-              console.log('Deliverable submitted successfully:', response.data);
-              alert("Deliverable submitted successfully!");
-              setIsUpdate(true);
-              setShowSubmissionModal(false);
+          // Add files to form data
+          for (const file of selectedFiles) {
+              formData.append("content_files", file);
+          }
           
-              // Reset form
-              setSelectedFiles([]);
-              setContentUrls(['']);
+          // Add URLs to form data (filter out empty URLs)
+          const validUrls = contentUrls.filter(url => url.trim() !== '');
+          for (const url of validUrls) {
+              formData.append("content_urls", url);
           }
 
+          // Check if at least one file or URL is provided
+          if (selectedFiles.length === 0 && validUrls.length === 0) {
+              setSubmissionError("At least one file or URL must be provided.");
+              setIsSubmitting(false);
+              return;
+          }
+
+          const response = await backendUrl.put(
+              `/api/deliverables/${contract.deliverable_id}/update_attachments/`, 
+              formData, 
+              {
+                  headers: { 
+                      "Content-Type": "multipart/form-data" 
+                  }
+              }
+          );
+          console.log('Deliverable updated successfully:', response.data);
+          alert("Deliverable updated successfully!");
+
+          //also updating resubmitted at
+          const responsePatch = await backendUrl.patch(
+            `/api/deliverables/${contract.deliverable_id}/`,
+            { 
+              revised_at: new Date().toISOString(),  // Send current timestamp in ISO format
+            }
+          );
+          console.log("deliverable revised_at updated successfully", responsePatch.data);
+          alert("Deliverable revised_at updated successfully")
+
+          
+          setShowSubmissionModal(false);
+          // Reset form
+          setSelectedFiles([]);
+          setContentUrls(['']);
+              
+
         } catch (error) {
-            console.error('Error submitting deliverable:', error.response?.data || error.message);
+            console.error('Error updating deliverable:', error.response?.data || error.message);
             setSubmissionError(
                 error.response?.data?.error || 
-                'Failed to submit deliverable. Please try again later.'
+                'Failed to update deliverable. Please try again later.'
             );
         } finally {
             setIsSubmitting(false);
@@ -216,15 +194,15 @@ const ContractDetailPage = () => {
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-200 bg-pink-100">
           <button 
-           onClick={() => navigate('/InfActiveContractsList')} 
+           onClick={() => navigate('/InfRevisionContractsList')} 
            className="flex items-center mr-2 cursor-pointer"
            disabled={isCancelling}
            >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">View contract</span>
+          <span className="text-base ml-1">View contract to be revised</span>
           <div className="ml-auto text-xs text-gray-400">
-            Sent on {formatDate(contract.brand_signed_at)}
+            last Revised at: {contract.deliverable_revised_at ? formatDate(contract.deliverable_revised_at) : 'not revised yet!'}
           </div>
           <div className="ml-2">
             <MoreVertical size={20} />
@@ -272,7 +250,6 @@ const ContractDetailPage = () => {
           <button 
            onClick={() => handleCancel(id)} 
            className="w-full py-3 px-4 text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium cursor-pointer mb-2"
-           disabled={contract.deliverable_status == "submitted" || isUpdate}
            >
             {isCancelling ? (
                   <div className="flex items-center justify-center">
@@ -292,7 +269,7 @@ const ContractDetailPage = () => {
            className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
            disabled={isCancelling}
            > 
-            {contract.deliverable_status == "submitted" || isUpdate ? 'Update Deliverable(s)' : 'Submit Deliverable(s)' } 
+            Update Deliverable(s)
           </button>
         </div>
 
@@ -302,7 +279,7 @@ const ContractDetailPage = () => {
             <div className="bg-white rounded-lg w-full max-w-md max-h-screen overflow-y-auto">
               {/* Modal Header */}
               <div className="flex items-center justify-between p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold">{contract.deliverable_status === "submitted" || isUpdate? 'Update Deliverable(s)':'Submit Deliverable(s)'}</h2>
+                <h2 className="text-lg font-semibold">Update Deliverable(s)</h2>
                 <button 
                   onClick={closeSubmissionModal}
                   className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
@@ -401,10 +378,10 @@ const ContractDetailPage = () => {
                           <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                           <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                         </svg>
-                        {contract.deliverable_status === "submitted" || isUpdate? 'Resubmitting':'Submitting'}
+                        Updating
                       </div>
                     ) : (
-                      contract.deliverable_status === "submitted" || isUpdate? 'Resubmit':'Submit'
+                      'Update deliverable(s)'
                     )}
                   </button>
                 </div>

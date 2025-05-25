@@ -11,8 +11,8 @@ const Contracts = () => {
       { path: '/InfRequestedOffersList', icon: <FileText size={20} />, label: 'Requested Offers' },
       { path: '/InfAcceptedOffersList', icon: <FileText size={20} />, label: 'Accepted Offers' },
       { path: '/InfActiveContractsList', icon: <Briefcase size={20} />, label: 'Active contracts' },
-      { path: '/approve-work', icon: <CheckSquare size={20} />, label: 'Approve work' },
-      { path: '/ended-contracts', icon: <Archive size={20} />, label: 'Ended contract' },
+      { path: '/InfRevisionContractsList', icon: <CheckSquare size={20} />, label: 'Contracts that need Revision' },
+      { path: '/InfReleasedContractsList', icon: <Archive size={20} />, label: 'Released contracts' },
     ];
   
     const handleBellClick = () => {

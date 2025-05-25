@@ -1,29 +1,29 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, MoreVertical } from "lucide-react";
 import backendUrl from "../../../../utils/backendUrl";
-import ContractCard from "./ActiveContractCard";
+import RevisionContractCard from "./RevisionContractCard";
 import { useNavigate } from "react-router-dom";
 
-const ActiveContractsList = () => {
+const RevisionContractsList = () => {
     const [contracts, setContracts] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     
     useEffect(() => {
-        const fetchActiveContracts = async () => {
+        const fetchRevisionContracts = async () => {
           try {
-            const response = await backendUrl.get('/api/active_contracts_brand/');
+            const response = await backendUrl.get('/api/contracts_on_revision/');
             setContracts(response.data);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching active contracts:', error.response?.data);
-            setError('Failed to load active contracts. Please try again later.');
+            console.error('Error fetching contracts:', error.response?.data);
+            setError('Failed to load contracts. Please try again later.');
             setLoading(false);
           }
         };
     
-        fetchActiveContracts();
+        fetchRevisionContracts();
       }, []);
     
 
@@ -31,7 +31,7 @@ const ActiveContractsList = () => {
     if (loading) {
       return (
         <div className="flex flex-col justify-center items-center h-screen space-y-4 bg-pink-50">
-          <p className="text-gray-600 text-sm">Loading active contracts...</p>
+          <p className="text-gray-600 text-sm">Loading contracts...</p>
           <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       );
@@ -53,7 +53,7 @@ const ActiveContractsList = () => {
           <button onClick={() => navigate('/Contracts')} className="flex items-center mr-2 cursor-pointer">
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">Active Contracts</span>
+          <span className="text-base ml-1">Contracts on going revision</span>
           <div className="ml-auto">
             <MoreVertical size={20} />
           </div>
@@ -65,7 +65,7 @@ const ActiveContractsList = () => {
             <div className="bg-red-100 border border-red-400 text-red-700 m-5 px-4 py-3 rounded text-center">No contracts available</div>
           ) : (
             contracts.map((contract) => (
-              <ContractCard 
+              <RevisionContractCard 
                 key={contract.id} 
                 contract={contract} 
               />
@@ -77,4 +77,4 @@ const ActiveContractsList = () => {
     );
   };
   
-  export default ActiveContractsList;
+  export default RevisionContractsList;
