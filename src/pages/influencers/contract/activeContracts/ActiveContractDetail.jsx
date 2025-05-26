@@ -226,9 +226,7 @@ const ContractDetailPage = () => {
           <div className="ml-auto text-xs text-gray-400">
             Sent on {formatDate(contract.brand_signed_at)}
           </div>
-          <div className="ml-2">
-            <MoreVertical size={20} />
-          </div>
+          
         </div>
         
         {/* Content */}

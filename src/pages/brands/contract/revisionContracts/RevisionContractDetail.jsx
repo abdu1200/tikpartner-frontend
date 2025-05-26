@@ -187,9 +187,7 @@ const ContractDetailPage = () => {
           <div className="ml-auto text-xs text-gray-400">
             Revised at: {contract.deliverable_revised_at ? formatDate(contract.deliverable_revised_at) : 'not revised yet!'}
           </div>
-          <div className="ml-2">
-            <MoreVertical size={20} />
-          </div>
+          
         </div>
         
         {/* Content */}

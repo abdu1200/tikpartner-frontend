@@ -14,6 +14,9 @@ import BrowseInfluencersPage from './pages/brands/BrowseInfluencer/BrowseInfluen
 import InfluencerDetailPage from './pages/brands/BrowseInfluencer/InfluencerDetailPage'
 import SearchInfluencersPage from './pages/brands/SearchInfluencer/SearchInfluencersPage'
 import SendContractPage from './pages/brands/contract/SendContract'
+import WorkHistoryPage from './pages/brands/WorkHistory'
+import PortfolioPage from './pages/brands/Portfolio'
+
 
 import WelcomePage from './pages/influencers/WelcomePage'
 import StripeSuccessPage from './pages/influencers/StripeSuccess'
@@ -37,6 +40,8 @@ import RevisionContractsList from './pages/brands/contract/revisionContracts/Rev
 import RevisionContractDetail from './pages/brands/contract/revisionContracts/RevisionContractDetail'
 import ReleasedContractsList from './pages/brands/contract/releasedContracts/ReleasedContractsList'
 import ReleasedContractDetail from './pages/brands/contract/releasedContracts/ReleasedContractDetail'
+import ReviewedContractsList from './pages/brands/contract/reviewedContracts/ReviewedContractsList'
+import ReviewedContractDetail from './pages/brands/contract/reviewedContracts/ReviewedContractDetail'
 
 
 
@@ -51,6 +56,8 @@ import InfRevisionContractsList from './pages/influencers/contract/revisionContr
 import InfRevisionContractDetail from './pages/influencers/contract/revisionContracts/RevisionContractDetail'
 import InfReleasedContractsList from './pages/influencers/contract/releasedContracts/ReleasedContractsList'
 import InfReleasedContractDetail from './pages/influencers/contract/releasedContracts/ReleasedContractDetail'
+import InfReviewedContractsList from './pages/influencers/contract/reviewedContracts/ReviewedContractsList'
+import InfReviewedContractDetail from './pages/influencers/contract/reviewedContracts/ReviewedContractDetail'
 
 
 
@@ -74,7 +81,10 @@ function App() {
       <Route path="/influencer/:id" element={<InfluencerDetailPage />} />
       <Route path="/SearchInfluencersPage" element={<SearchInfluencersPage />} />
       <Route path="/SendContract/:id" element={<SendContractPage />} />
-      
+      <Route path="/WorkHistoryPage/:influencerUserId" element={<WorkHistoryPage />} />
+      <Route path="/PortfolioPage/:influencerId" element={<PortfolioPage />} />
+
+
       <Route path="/WelcomePage" element={<WelcomePage />} />
       <Route path="/StripeSuccessPage" element={<StripeSuccessPage />} />
       <Route path="/SubmitPortfolioPage" element={<SubmitPortfolioPage />} />
@@ -97,6 +107,8 @@ function App() {
       <Route path="/RevisionContract/:id" element={<RevisionContractDetail />} />
       <Route path="/ReleasedContractsList" element={<ReleasedContractsList />} />
       <Route path="/ReleasedContract/:id" element={<ReleasedContractDetail />} />
+      <Route path="/ReviewedContractsList" element={<ReviewedContractsList />} />
+      <Route path="/ReviewedContract/:id" element={<ReviewedContractDetail />} />
 
 
 
@@ -111,6 +123,8 @@ function App() {
       <Route path="/InfRevisionContract/:id" element={<InfRevisionContractDetail />} />
       <Route path="/InfReleasedContractsList" element={<InfReleasedContractsList />} />
       <Route path="/InfReleasedContract/:id" element={<InfReleasedContractDetail />} />
+      <Route path="/InfReviewedContractsList" element={<InfReviewedContractsList />} />
+      <Route path="/InfReviewedContract/:id" element={<InfReviewedContractDetail />} />
 
 
     </Routes>

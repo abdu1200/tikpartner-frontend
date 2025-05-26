@@ -13,6 +13,7 @@ const Contracts = () => {
       { path: '/InfActiveContractsList', icon: <Briefcase size={20} />, label: 'Active contracts' },
       { path: '/InfRevisionContractsList', icon: <CheckSquare size={20} />, label: 'Contracts that need Revision' },
       { path: '/InfReleasedContractsList', icon: <Archive size={20} />, label: 'Released contracts' },
+      { path: '/InfReviewedContractsList', icon: <Archive size={20} />, label: 'Reviewed contracts' },
     ];
   
     const handleBellClick = () => {

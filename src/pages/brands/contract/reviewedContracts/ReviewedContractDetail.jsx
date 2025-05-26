@@ -1,31 +1,31 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, MoreVertical } from "lucide-react";
+import { ChevronLeft, MoreVertical, Star } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import backendUrl from "../../../../utils/backendUrl";
 
-const OfferDetailPage = () => {
-    const [offer, setOffer] = useState(null);
+const ContractDetailpage = () => {
+    const [contract, setContract] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
-    const [isCancelling, setIsCancelling] = useState(false);
+    const [isDeleting, setIsDeleting] = useState(false);
   
     
     useEffect(() => {
-        const fetchAcceptedOfferDetail = async () => {
+        const fetchReviewedContractDetail = async () => {
           try {
-            const response = await backendUrl.get(`/api/accepted_offers/${id}/`);
-            setOffer(response.data);
+            const response = await backendUrl.get(`/api/reviewed_contracts/${id}/`);
+            setContract(response.data);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching accepted offer details:', error.response?.data);
-            setError('Failed to load accepted offer details. Please try again later.');
+            console.error('Error fetching reviewed contract details:', error.response?.data);
+            setError('Failed to load review contract details. Please try again later.');
             setLoading(false);
           }
         };
     
-        fetchAcceptedOfferDetail();
+        fetchReviewedContractDetail();
      }, [id]);    
     
 
@@ -36,23 +36,23 @@ const OfferDetailPage = () => {
     };
 
 
-    const handleCancel = async (id) => {
-      setIsCancelling(true);
+    const handleDelete = async (review_id) => {
+      setIsDeleting(true);
       setError(null)
 
       try {
-        const response = await backendUrl.delete(`/api/accepted_offers/${id}/`);
-        console.log('Offer cancelled successfully:', response.data);
+        const response = await backendUrl.delete(`/api/reviews/${review_id}/`);
+        console.log('Review deleted successfully:', response.data);
         
-        alert("Offer cancelled successfully");
-        navigate('/InfAcceptedOffersList');
+        alert("Review deleted successfully");
+        navigate('/ReviewedContractsList');
 
       } catch (error) {
-        console.error('Error cancelling offer:', error.response?.data || error.message);
-        setError('Failed to cancel accepted offer. Please try again later.');
+        console.error('Error deleting contract review:', error.response?.data || error.message);
+        setError('Failed to delete contract review. Please try again later.');
 
       } finally {
-        setIsCancelling(false);
+        setIsDeleting(false);
       }
     };
     
@@ -61,7 +61,7 @@ const OfferDetailPage = () => {
     if (loading) {
       return (
         <div className="flex flex-col justify-center items-center h-screen space-y-4 bg-pink-50">
-          <p className="text-gray-600 text-sm">Loading an offer...</p>
+          <p className="text-gray-600 text-sm">Loading a contract...</p>
           <div className="animate-spin rounded-full h-10 w-10 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       );
@@ -75,10 +75,10 @@ const OfferDetailPage = () => {
       );
     }
   
-    if (!offer) {
+    if (!contract) {
       return (
         <div className="h-full flex items-center justify-center bg-white bg-red-100 border border-red-400 px-4 py-3 rounded">
-          <div>Offer not found</div>
+          <div>Contract not found</div>
         </div>
       );
     }
@@ -89,15 +89,15 @@ const OfferDetailPage = () => {
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-200 bg-pink-100">
           <button 
-           onClick={() => navigate('/InfAcceptedOffersList')} 
+           onClick={() => navigate('/ReviewedContractsList')} 
            className="flex items-center mr-2 cursor-pointer"
-           disabled={isCancelling}
+           disabled={isDeleting}
            >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">View offer</span>
+          <span className="text-base ml-1">View reviewed contract</span>
           <div className="ml-auto text-xs text-gray-400">
-            Sent on {formatDate(offer.brand_signed_at)}
+            Review on: {formatDate(contract.review_created_at)}
           </div>
           
         </div>
@@ -106,59 +106,63 @@ const OfferDetailPage = () => {
         <div className="flex-1 overflow-y-auto p-4">
           <div className="mb-6">
             <div className="text-sm text-gray-500">Contract title</div>
-            <div className="text-base mt-1">{offer.title}</div>
-          </div>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">From brand:</div>
-            <div className="flex items-center mt-2">
-              <span className="text-base">{offer.brand_name}</span>
-            </div>
-          </div>
-          
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">Payment Amount</div>
-            <div className="text-base mt-1">$ {offer.payment_amount}</div>
+            <div className="text-base mt-1">{contract.title}</div>
           </div>
 
           <div className="mb-6">
             <div className="text-sm text-gray-500">Deliverable title</div>
-            <div className="text-base mt-1">{offer.deliverable_title}</div>
+            <div className="text-base mt-1">{contract.deliverable_title}</div>
+          </div>
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">To influencer:</div>
+            <div className="flex items-center mt-2">
+              <span className="text-base">{contract.influencer_name}</span>
+            </div>
           </div>
           
           <div className="mb-6">
-            <div className="text-sm text-gray-500">Deliverable deadline</div>
-            <div className="text-base mt-1">{formatDate(offer.deliverable_deadline)}</div>
+            <div className="text-sm text-gray-500">Review Rating</div>
+            <div className="flex space-x-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  className={`p-1 ${contract.review_rating >= star ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400 transition-colors`}
+                >
+                  <Star size={24} fill={contract.review_rating >= star ? 'currentColor' : 'none'} />
+                </button>
+              ))}
+            </div>
           </div>
-          
+
           <div className="mb-6">
-            <div className="text-sm text-gray-500">deliverable description</div>
-            <div className="text-base mt-1">{offer.deliverable_description || "No description"} </div>
+            <div className="text-sm text-gray-500">Review text</div>
+            <div className="text-base mt-1">{contract.review_review_text}</div>
           </div>
           
         </div>
         
         {/* Buttons */}
-        <div className="p-4">
+        <div className="p-4 mt-15">
           <button 
-           onClick={() => navigate('/InfAcceptedOffersList')} 
+           onClick={() => navigate('/ReviewedContractsList')} 
            className="w-full py-3 px-4 border border-gray-300 text-gray-700 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
-           disabled={isCancelling}
+           disabled={isDeleting}
            > 
             Go back
           </button>
           
-          <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
-            {isCancelling ? (
+          <button onClick={() => handleDelete(contract.review_id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
+            {isDeleting ? (
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                       <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                       <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                     </svg>
-                    Cancelling offer...
+                    Deleting contract review...
                   </div>
                 ) : (
-                  'Cancel Offer'
+                  'Delete contract Review'
                 )}
           </button>
         </div>
@@ -167,4 +171,4 @@ const OfferDetailPage = () => {
     );
   };
   
-  export default OfferDetailPage;
+  export default ContractDetailpage;

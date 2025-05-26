@@ -100,11 +100,12 @@ const InfluencerDetailPage = () => {
     <div className="flex flex-col min-h-screen bg-white font-outfit">
       <header className="p-4 bg-white sticky top-0 z-20 flex items-center border-b border-pink-300">
         <button 
-           onClick={() => navigate(-1)} 
+           onClick={() => navigate('/BrowseInfluencersPage')} 
            className="flex items-center mr-2 cursor-pointer"
         >
           <ChevronLeft size={20} />
         </button>
+        
         <h1 className="text-lg text-pink-600 font-medium flex-grow">{influencer.display_name}</h1>
         <button  onClick={handleFavoriteClick}>
           <Heart className={`h-5 w-5 ${isFavorite ? 'fill-red-500 text-red-500' : 'text-gray-500'}`} />
@@ -189,14 +190,14 @@ const InfluencerDetailPage = () => {
             </div>
             <button 
               className="w-full py-2  mt-10 md:h-11 md:mt-12 lg:mt-10 border border-pink-600 text-pink-600 rounded-lg text-center font-medium hover:bg-gray-50 cursor-pointer"
-              onClick={() => navigate(`/portfolio/${influencer.user?.username || influencer.id}`)}
+              onClick={() => navigate(`/PortfolioPage/${influencer.id}`)}
             >
               Portfolio
             </button>
 
             <button 
               className="w-full py-2 md:h-11 border border-pink-600 text-pink-600 rounded-lg text-center font-medium hover:bg-gray-50 cursor-pointer"
-              onClick={() => navigate(`/work-history/${influencer.user?.username || influencer.id}`)}
+              onClick={() => navigate(`/WorkHistoryPage/${influencer.user.id}`)}
             >
               Work History
             </button>

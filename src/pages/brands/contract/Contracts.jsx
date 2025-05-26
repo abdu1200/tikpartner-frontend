@@ -14,6 +14,7 @@ const Contracts = () => {
       { path: '/ApproveWorksList', icon: <CheckSquare size={20} />, label: 'Contracts to be Approved' },
       { path: '/RevisionContractsList', icon: <CheckSquare size={20} />, label: 'Contracts on Revision' },
       { path: '/ReleasedContractsList', icon: <Archive size={20} />, label: 'Released contracts' },
+      { path: '/ReviewedContractsList', icon: <Archive size={20} />, label: 'Reviewed contracts' },
     ];
   
     const handleBellClick = () => {

@@ -54,9 +54,7 @@ const RevisionContractsList = () => {
             <ChevronLeft size={20} />
           </button>
           <span className="text-base ml-1">Contracts on going revision</span>
-          <div className="ml-auto">
-            <MoreVertical size={20} />
-          </div>
+          
         </div>
         
         {/* Content */}

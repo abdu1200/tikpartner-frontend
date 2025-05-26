@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, MoreVertical } from "lucide-react";
+import { ChevronLeft, MoreVertical, Star } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import backendUrl from "../../../../utils/backendUrl";
 
-const ContractDetailPage = () => {
+const ContractDetailpage = () => {
     const [contract, setContract] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -12,19 +12,19 @@ const ContractDetailPage = () => {
   
     
     useEffect(() => {
-        const fetchReleasedContractDetail = async () => {
+        const fetchReviewedContractDetail = async () => {
           try {
-            const response = await backendUrl.get(`/api/released_contracts/${id}/`);
+            const response = await backendUrl.get(`/api/reviewed_contracts/${id}/`);
             setContract(response.data);
             setLoading(false);
           } catch (error) {
-            console.error('Error fetching contract details:', error.response?.data);
-            setError('Failed to load contract details. Please try again later.');
+            console.error('Error fetching reviewed contract details:', error.response?.data);
+            setError('Failed to load review contract details. Please try again later.');
             setLoading(false);
           }
         };
     
-        fetchReleasedContractDetail();
+        fetchReviewedContractDetail();
      }, [id]);    
     
 
@@ -33,7 +33,7 @@ const ContractDetailPage = () => {
         const date = new Date(dateString);
         return `${date.toLocaleString('default', { month: 'short' })} ${date.getDate()}, ${date.getFullYear()}`;
     };
-  
+    
 
   
     if (loading) {
@@ -67,16 +67,16 @@ const ContractDetailPage = () => {
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-200 bg-pink-100">
           <button 
-           onClick={() => navigate('/InfReleasedContractsList')} 
+           onClick={() => navigate('/InfReviewedContractsList')} 
            className="flex items-center mr-2 cursor-pointer"
            >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">View Released contract</span>
+          <span className="text-base ml-1">View reviewed contract</span>
           <div className="ml-auto text-xs text-gray-400">
-            Fund released at {formatDate(contract.deliverable_approved_at)}
+            Reviewed on: {formatDate(contract.review_created_at)}
           </div>
-          
+      
         </div>
         
         {/* Content */}
@@ -85,55 +85,51 @@ const ContractDetailPage = () => {
             <div className="text-sm text-gray-500">Contract title</div>
             <div className="text-base mt-1">{contract.title}</div>
           </div>
-          
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">Deliverable title</div>
+            <div className="text-base mt-1">{contract.deliverable_title}</div>
+          </div>
+
           <div className="mb-6">
             <div className="text-sm text-gray-500">From brand:</div>
             <div className="flex items-center mt-2">
               <span className="text-base">{contract.brand_name}</span>
             </div>
           </div>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">Original Amount</div>
-            <div className="text-base mt-1">$ {contract.payment_amount}</div>
-          </div>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">Released Amount</div>
-            <div className="text-base mt-1">$ {contract.payment_transfer_amount}</div>
-          </div>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">Platform Fee</div>
-            <div className="text-base mt-1">$ {contract.payment_platform_fee}</div>
-          </div>
-
-          <div className="mb-6">
-            <div className="text-sm text-gray-500">Deliverable title</div>
-            <div className="text-base mt-1">{contract.deliverable_title}</div>
-          </div>
           
           <div className="mb-6">
-            <div className="text-sm text-gray-500">deliverable description</div>
-            <div className="text-base mt-1">{contract.deliverable_description || "No description"} </div>
+            <div className="text-sm text-gray-500">Review Rating</div>
+            <div className="flex space-x-1">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  className={`p-1 ${contract.review_rating >= star ? 'text-yellow-400' : 'text-gray-300'} hover:text-yellow-400 transition-colors`}
+                >
+                  <Star size={24} fill={contract.review_rating >= star ? 'currentColor' : 'none'} />
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="text-sm text-gray-500">Review text</div>
+            <div className="text-base mt-1">{contract.review_review_text}</div>
           </div>
           
         </div>
         
         {/* Buttons */}
-        <div className="p-4">
-
+        <div className="p-4 mt-15">
           <button 
-           onClick={() => navigate('/InfReleasedContractsList')} 
-           className="w-full py-3 px-4 border border-gray-300 text-gray-700 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
-           > 
+           onClick={() => navigate('/InfReviewedContractsList')} 
+           className="w-full py-3 px-4 border border-gray-300 text-gray-700 bg-gray-200 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"           > 
             Go back
           </button>
-          
         </div>
       </div>
      </div>
     );
   };
   
-  export default ContractDetailPage;
+  export default ContractDetailpage;
