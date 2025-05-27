@@ -9,14 +9,19 @@ const ContractDetailPage = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
-    const [isApproving, setIsApproving] = useState(false);
-    const [isRequesting, setIsRequesting] = useState(false);
     
     // Deliverable modal states
     const [showDeliverableModal, setShowDeliverableModal] = useState(false);
     const [deliverable, setDeliverable] = useState(null);
     const [deliverableLoading, setDeliverableLoading] = useState(false);
     const [deliverableError, setDeliverableError] = useState(null);
+    const [isApproving, setIsApproving] = useState(false);  // we use the normal 'error' state for approving error
+    
+    // Revision modal states
+    const [showRevisionModal, setShowRevisionModal] = useState(false);
+    const [isRequesting, setIsRequesting] = useState(false);  // we use the normal 'error' state for revision requesting error
+    const [feedback, setFeedback] = useState('');
+   
   
     
     useEffect(() => {
@@ -125,6 +130,19 @@ const ContractDetailPage = () => {
     };
 
 
+    const openRevisionModal = () => {
+      setShowRevisionModal(true);
+      setError(null);
+    };
+
+    const closeRevisionModal = () => {
+      setShowRevisionModal(false);
+      setError(null);
+    };
+  
+
+
+
     const handleRevision = async () => {
       setIsRequesting(true);
       setError(null);
@@ -132,7 +150,9 @@ const ContractDetailPage = () => {
       try {
         const response = await backendUrl.patch(
           `/api/deliverables/${contract.deliverable_id}/`,
-          { status: 'revision'}
+          { status: 'revision',
+            feedback: feedback
+          }
         );
         console.log("deliverable status updated to revision successfully", response.data);
         alert("deliverable status updated to revision successfully");
@@ -262,18 +282,95 @@ const ContractDetailPage = () => {
         </div>
         
         {/* Buttons */}
-        <div className="p-4">
+        <div className="flex space-x-3">
+          <button 
+           onClick={openRevisionModal}
+           className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
+          > 
+            Revision Required
+          </button>
+
           <button onClick={handleViewDeliverables} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
             View Deliverables
           </button>
-
-          {/* <button 
-           onClick={() => navigate('/ApproveWorksList')} 
-           className="w-full py-3 px-4 border border-gray-300 bg-green-100 text-gray-700 hover:bg-gray-300 transition duration-200 rounded-md text-center font-medium mt-3 cursor-pointer"
-           > 
-            Release Fund
-          </button> */}
         </div>
+
+        
+
+        {/* Revision Modal */}
+        {showRevisionModal && (
+          <div className="fixed absolute inset-0 backdrop-blur-xs bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold">Request Revision</h2>
+                <button 
+                  onClick={closeRevisionModal}
+                  className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
+                  disabled={isRequesting}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="mb-4">
+                  <label htmlFor="feedback" className="block text-sm font-medium text-gray-700 mb-2">
+                    Feedback <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="feedback"
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Please provide specific feedback about what needs to be revised..."
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                    rows="6"
+                    disabled={isRequesting}
+                  />
+                </div>
+                
+                {error && (   //if there is error when requesting revision
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm mb-4">
+                    {error}
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Buttons */}
+              <div className="p-4 border-t border-gray-200">
+                <div className="flex space-x-3">
+                  <button
+                    onClick={closeRevisionModal}
+                    className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
+                    disabled={isRequesting}
+                  >
+                    Go Back
+                  </button>
+                  
+                  <button
+                    onClick={handleRevision}
+                    className="flex-1 py-2 px-4 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-200 cursor-pointer"
+                    disabled={isRequesting || !feedback.trim()}
+                  >
+                    {isRequesting ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Requesting revision...
+                      </div>
+                    ) : (
+                      'Request Revision'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* Deliverable Modal */}
         {showDeliverableModal && (
@@ -303,27 +400,6 @@ const ContractDetailPage = () => {
                   </div>
                 ) : deliverable ? (
                   <div className="space-y-6">
-                    {/* Basic Info
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <div className="text-sm text-gray-500">Brand</div>
-                        <div className="text-base mt-1">{deliverable.brand_name}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-500">Influencer</div>
-                        <div className="text-base mt-1">{deliverable.influencer_name}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-500">Status</div>
-                        <div className="text-base mt-1 capitalize">{deliverable.status}</div>
-                      </div>
-                      <div>
-                        <div className="text-sm text-gray-500">Submitted At</div>
-                        <div className="text-base mt-1">
-                          {deliverable.submitted_at ? formatDate(deliverable.submitted_at) : 'Not submitted'}
-                        </div>
-                      </div>
-                    </div> */}
 
                     {/* Attachments */}
                     {deliverable.attachments && deliverable.attachments.length > 0 ? (
@@ -402,32 +478,30 @@ const ContractDetailPage = () => {
                     )}
                   </div>
                 ) : null}
+
+                {error && (  //if there is error when approving
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm mb-4">
+                    {error}
+                  </div>
+                )}
+
               </div>
 
               {/* Modal Buttons */}
               <div className="p-4 border-t border-gray-200">
                 <div className="flex space-x-3">
                   <button
-                    onClick={handleRevision}
+                    onClick={closeDeliverableModal}
                     className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
-                    disabled={isApproving || deliverableLoading || deliverableError}
+                    disabled={isRequesting}
                   >
-                    {isRequesting ? (
-                      <div className="flex items-center justify-center">
-                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                        </svg>
-                        Requesting revision...
-                      </div>
-                    ) : (
-                      'Revision required'
-                    )}
+                    Go Back
                   </button>
+                  
                   <button
                     onClick={handleApprove}
                     className="flex-1 py-2 px-4 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-200 cursor-pointer"
-                    disabled={deliverableLoading || deliverableError || isRequesting}
+                    disabled={deliverableLoading || deliverableError}
                   >
                     {isApproving ? (
                       <div className="flex items-center justify-center">

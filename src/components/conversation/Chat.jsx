@@ -29,7 +29,7 @@ function Chat() {
         lastMessage,
         readyState,
     } = useWebSocket(socketUrl, {
-        shouldReconnect: (closeEvent) => true,
+        shouldReconnect: (closevent) => true,
         reconnectAttempts: 10,
         reconnectInterval: 3000,
         protocols: ['authorization'], 

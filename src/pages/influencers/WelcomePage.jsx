@@ -3,6 +3,7 @@ import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, Up
 import agreementIcon from '../../assets/agreement.jpg';
 import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom';
+import MessageNotifications from '../../components/MessageNotifications';
 
 
 const WelcomePage = () => {
@@ -32,7 +33,7 @@ const WelcomePage = () => {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-pink-50 font-sans">
+    <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
       {/* Header */}
       <header className="p-4 bg-white sticky top-0 z-20">
         <div className="container mx-auto">
@@ -43,15 +44,11 @@ const WelcomePage = () => {
                 <div className="w-8 h-8 lg:w-10 lg:h-10 rounded-full overflow-hidden mr-2 lg:mr-3">
                   <img src={agreementIcon} alt="Logo" className="w-full h-full object-cover" />
                 </div>
-                <h1 className="text-lg lg:text-xl font-semibold text-gray-800">Hello influencer</h1>
+                <h1 className="text-lg lg:text-xl font-semibold text-gray-800">TikPartner</h1>
               </div>
               {/* Notification icon & menu toggle for MOBILE */}
               <div className="flex items-center lg:hidden">
-                <button className="p-2 mr-2">
-                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                  </svg>
-                </button>
+                <MessageNotifications />
                 <button 
                   className="p-2 cursor-pointer" 
                   onClick={toggleMobileMenu}
@@ -84,11 +81,7 @@ const WelcomePage = () => {
                 <span>Profile</span>
               </a>
               {/* Notification bell for desktop */}
-              <button className="p-2">
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"></path>
-                </svg>
-              </button>
+              <MessageNotifications />
             </nav>
           </div>
         </div>
@@ -125,7 +118,7 @@ const WelcomePage = () => {
       
       {/* Main Content */}
       <main className="flex-grow p-4 md:container md:mx-auto">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-normal mb-4 md:mb-8">Welcome Influencers</h2>
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-normal mb-4 md:mb-8">Set up your Account/Profile</h2>
         
         {/* Action Buttons Section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-2xl">

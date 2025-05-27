@@ -125,6 +125,7 @@ const ContractDetailPage = () => {
           const responsePatch = await backendUrl.patch(
             `/api/deliverables/${contract.deliverable_id}/`,
             { 
+              status: 'updated',
               revised_at: new Date().toISOString(),  // Send current timestamp in ISO format
             }
           );
@@ -239,6 +240,11 @@ const ContractDetailPage = () => {
           <div className="mb-6">
             <div className="text-sm text-gray-500">deliverable description</div>
             <div className="text-base mt-1">{contract.deliverable_description || "No description"} </div>
+          </div>
+
+          <div className="mb-6">
+            <div className="text-md text-gray-500">deliverable feedback</div>
+            <div className="text-base mt-1">{contract.deliverable_feedback} </div>
           </div>
           
         </div>

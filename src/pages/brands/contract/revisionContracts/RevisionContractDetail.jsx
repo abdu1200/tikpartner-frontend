@@ -9,17 +9,23 @@ const ContractDetailPage = () => {
     const [error, setError] = useState(null);
     const { id } = useParams();
     const navigate = useNavigate();
-    const [isCancelling, setIsCancelling] = useState(false);
     
     // Deliverable modal states
     const [showDeliverableModal, setShowDeliverableModal] = useState(false);
     const [deliverable, setDeliverable] = useState(null);
     const [deliverableLoading, setDeliverableLoading] = useState(false);
     const [deliverableError, setDeliverableError] = useState(null);
+    const [isApproving, setIsApproving] = useState(false);  // we use the normal 'error' state for approving error
+    
+    // Revision modal states
+    const [showRevisionModal, setShowRevisionModal] = useState(false);
+    const [isRequesting, setIsRequesting] = useState(false);  // we use the normal 'error' state for revision requesting error
+    const [feedback, setFeedback] = useState('');
+   
   
     
     useEffect(() => {
-        const fetchRevisionContractDetail = async () => {
+        const fetchApproveContractDetail = async () => {
           try {
             const response = await backendUrl.get(`/api/contracts_on_revision/${id}/`);
             setContract(response.data);
@@ -31,7 +37,7 @@ const ContractDetailPage = () => {
           }
         };
     
-        fetchRevisionContractDetail();
+        fetchApproveContractDetail();
      }, [id]);    
     
 
@@ -90,6 +96,9 @@ const ContractDetailPage = () => {
 
 
     const handleApprove = async () => {
+      setIsApproving(true);
+      setError(null);
+
       try {
         // 1. Update deliverable status
         const deliverableRes = await backendUrl.patch(
@@ -108,13 +117,54 @@ const ContractDetailPage = () => {
         );
         console.log("Payment released:", paymentRes.data);
         alert("payment released successfully")
+
+        navigate('/ReleasedContractsList');
     
       } catch (error) {
         console.error('Error in approval or payment:', error.response?.data || error);
         setError('Something went wrong. Please try again or contact support.');
+
+      } finally {
+        setIsApproving(false);
       }
     };
-    
+
+
+    const openRevisionModal = () => {
+      setShowRevisionModal(true);
+      setError(null);
+    };
+
+    const closeRevisionModal = () => {
+      setShowRevisionModal(false);
+      setError(null);
+    };
+  
+
+
+
+    const handleRevision = async () => {
+      setIsRequesting(true);
+      setError(null);
+
+      try {
+        const response = await backendUrl.patch(
+          `/api/deliverables/${contract.deliverable_id}/`,
+          { status: 'revision',
+            feedback: feedback
+          }
+        );
+        console.log("deliverable status updated to revision successfully", response.data);
+        alert("deliverable status updated to revision successfully");
+        navigate('/RevisionContractsList')
+
+      } catch (error) {
+          console.error('Failed to update deliverable status:', error.response?.data);
+          setError('Failed to update deliverable status. Please try again or contact support.');
+      } finally {
+        setIsRequesting(false);
+      }
+    };
 
 
     // Helper function to get proper Cloudinary URLs
@@ -179,13 +229,13 @@ const ContractDetailPage = () => {
           <button 
            onClick={() => navigate('/RevisionContractsList')} 
            className="flex items-center mr-2 cursor-pointer"
-           disabled={isCancelling}
+           disabled={isApproving || isRequesting}
            >
             <ChevronLeft size={20} />
           </button>
-          <span className="text-base ml-1">View contract on Revision</span>
+          <span className="text-base ml-1">View contract</span>
           <div className="ml-auto text-xs text-gray-400">
-            Revised at: {contract.deliverable_revised_at ? formatDate(contract.deliverable_revised_at) : 'not revised yet!'}
+            Last Revised at: {contract.deliverable_revised_at ? formatDate(contract.deliverable_revised_at) : 'not revised yet!'}
           </div>
           
         </div>
@@ -225,19 +275,102 @@ const ContractDetailPage = () => {
           </div>
           
           <div className="mb-6">
-            <div className="text-sm text-gray-500">deliverable revised at</div>
+            <div className="text-sm text-gray-500">deliverable last revised at</div>
             <div className="text-base mt-1">{contract.deliverable_revised_at ? formatDate(contract.deliverable_revised_at) : 'not revised yet!'} </div>
           </div>
           
         </div>
         
         {/* Buttons */}
-        <div className="p-4">
+        <div className="flex space-x-3">
+          <button 
+           onClick={openRevisionModal}
+           className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
+          > 
+            Revision Required
+          </button>
+
           <button onClick={handleViewDeliverables} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
             View Deliverables
           </button>
-
         </div>
+
+        
+
+        {/* Revision Modal */}
+        {showRevisionModal && (
+          <div className="fixed absolute inset-0 backdrop-blur-xs bg-black bg-opacity-30 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-lg w-full max-w-md max-h-[90vh] overflow-hidden flex flex-col">
+              {/* Modal Header */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200">
+                <h2 className="text-lg font-semibold">Request Revision</h2>
+                <button 
+                  onClick={closeRevisionModal}
+                  className="p-1 hover:bg-gray-100 rounded-full cursor-pointer"
+                  disabled={isRequesting}
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              {/* Modal Content */}
+              <div className="flex-1 overflow-y-auto p-4">
+                <div className="mb-4">
+                  <label htmlFor="feedback" className="block text-sm font-medium text-gray-700 mb-2">
+                    Feedback <span className="text-red-500">*</span>
+                  </label>
+                  <textarea
+                    id="feedback"
+                    value={feedback}
+                    onChange={(e) => setFeedback(e.target.value)}
+                    placeholder="Please provide specific feedback about what needs to be revised..."
+                    className="w-full p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-pink-500 focus:border-transparent resize-none"
+                    rows="6"
+                    disabled={isRequesting}
+                  />
+                </div>
+                
+                {error && (   //if there is error when requesting revision
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm mb-4">
+                    {error}
+                  </div>
+                )}
+              </div>
+
+              {/* Modal Buttons */}
+              <div className="p-4 border-t border-gray-200">
+                <div className="flex space-x-3">
+                  <button
+                    onClick={closeRevisionModal}
+                    className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
+                    disabled={isRequesting}
+                  >
+                    Go Back
+                  </button>
+                  
+                  <button
+                    onClick={handleRevision}
+                    className="flex-1 py-2 px-4 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-200 cursor-pointer"
+                    disabled={isRequesting || !feedback.trim()}
+                  >
+                    {isRequesting ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Requesting revision...
+                      </div>
+                    ) : (
+                      'Request Revision'
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
 
         {/* Deliverable Modal */}
         {showDeliverableModal && (
@@ -340,22 +473,47 @@ const ContractDetailPage = () => {
                     ) : (
                       <div className="text-center py-8 text-gray-500">
                         <FileText size={48} className="mx-auto mb-2 opacity-50" />
-                        <p>Deliverables hasn't been revised yet!</p>
+                        <p>No attachments found</p>
                       </div>
                     )}
                   </div>
                 ) : null}
+
+                {error && (  //if there is error when approving
+                  <div className="bg-red-100 border border-red-400 text-red-700 px-3 py-2 rounded text-sm mb-4">
+                    {error}
+                  </div>
+                )}
+
               </div>
 
               {/* Modal Buttons */}
               <div className="p-4 border-t border-gray-200">
                 <div className="flex space-x-3">
                   <button
+                    onClick={closeDeliverableModal}
+                    className="flex-1 py-2 px-4 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition duration-200 cursor-pointer"
+                    disabled={isRequesting}
+                  >
+                    Go Back
+                  </button>
+                  
+                  <button
                     onClick={handleApprove}
                     className="flex-1 py-2 px-4 bg-pink-600 text-white rounded-md hover:bg-pink-700 transition duration-200 cursor-pointer"
-                    disabled={deliverableLoading || deliverableError || !(deliverable.attachments && deliverable.attachments.length)}
+                    disabled={deliverableLoading || deliverableError}
                   >
-                    Approve and release Fund
+                    {isApproving ? (
+                      <div className="flex items-center justify-center">
+                        <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                          <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                          <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                        </svg>
+                        Approving...
+                      </div>
+                    ) : (
+                      'Approve & Release fund'
+                    )}
                   </button>
                 </div>
               </div>
