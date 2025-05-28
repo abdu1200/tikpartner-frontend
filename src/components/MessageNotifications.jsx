@@ -64,7 +64,7 @@ const MessageNotifications = () => {
       >
         <Bell size={20} />
         {count > 0 && (
-          <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 md:h-5 md:w-5 flex items-center justify-center">
+          <span className="absolute -top-1 -right-1 bg-pink-500 text-white text-xs rounded-full h-4 w-4 md:h-5 md:w-5 flex items-center justify-center">
             {count > 9 ? '9+' : count}
           </span>
         )}

@@ -134,7 +134,7 @@ const ViewPortfolio = () => {
     const cloudinaryUrl = getCloudinaryUrl(file.file);
     
     return (
-      <div className="flex flex-col">
+      <div className="flex flex-col font-outfit">
         <div 
           className="relative group cursor-pointer bg-black rounded-lg overflow-hidden aspect-square"
           onClick={() => onPreview(file)}
@@ -209,7 +209,7 @@ const ViewPortfolio = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-pink-50 flex flex-col">
+      <div className="min-h-screen bg-pink-50 flex flex-col font-outfit">
         <header className="p-4 bg-white">
           <div className="container mx-auto">
             <button
@@ -225,7 +225,7 @@ const ViewPortfolio = () => {
         <main className="flex-grow flex items-center justify-center">
           <div className="flex items-center space-x-3">
             <Loader2 className="w-8 h-8 animate-spin text-pink-500" />
-            <span className="text-lg text-gray-600">Loading your portfolios...</span>
+            <span className="text-sm md:text-md text-gray-600">Loading your portfolios...</span>
           </div>
         </main>
       </div>
@@ -234,7 +234,7 @@ const ViewPortfolio = () => {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-pink-50 flex flex-col">
+      <div className="min-h-screen bg-pink-50 flex flex-col font-outfit">
         <header className="p-4 bg-white">
           <div className="container mx-auto">
             <button
@@ -269,7 +269,7 @@ const ViewPortfolio = () => {
   }
 
   return (
-    <div className="min-h-screen bg-pink-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-pink-50 flex flex-col font-outfit">
       {/* Header */}
       <header className="p-4 bg-white shadow-sm">
         <div className="container mx-auto">
@@ -288,7 +288,7 @@ const ViewPortfolio = () => {
         <div className="max-w-6xl mx-auto">
           {/* Page Header */}
           <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-2">My Portfolio</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">My Portfolio</h1>
             <p className="text-gray-600">
               View and manage your portfolio collections
             </p>
@@ -315,10 +315,10 @@ const ViewPortfolio = () => {
               {Object.entries(groupedPortfolios).map(([title, portfolioFiles]) => (
                 <div key={title} className="bg-white rounded-xl shadow-lg overflow-hidden">
                   {/* Collection Header */}
-                  <div className="bg-gradient-to-r from-pink-400 to-pink-500 p-6 text-white">
+                  <div className="bg-pink-400 p-2 text-sm md:text-normal md:p-4 text-white">
                     <div className="flex items-center justify-between">
                       <div>
-                        <h2 className="text-2xl font-bold mb-1">{title}</h2>
+                        <h2 className="text-lg md:text-2xl font-bold mb-1">{title}</h2>
                         <div className="flex items-center text-pink-100 space-x-4">
                           <span className="flex items-center">
                             <FileText className="w-4 h-4 mr-1" />
@@ -395,7 +395,7 @@ const ViewPortfolio = () => {
                 </div>
                 <button
                   onClick={() => handleDownload(selectedMedia.file, selectedMedia.original_filename || `portfolio_${selectedMedia.id}`)}
-                  className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors"
+                  className="p-2 text-green-600 hover:bg-green-50 rounded-md transition-colors cursor-pointer"
                   title="Download file"
                 >
                   <Download size={16} />

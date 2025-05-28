@@ -1,15 +1,74 @@
-import { useState } from 'react';
-import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, Upload } from 'lucide-react';
+import { useState, useEffect } from 'react';
+import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, Upload, Crown, Send, ArrowLeft } from 'lucide-react';
 import agreementIcon from '../../assets/agreement.jpg';
 import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom';
 import MessageNotifications from '../../components/MessageNotifications';
 
-
 const WelcomePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [isLoadingStripe, setIsLoadingStripe] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [showBrandsList, setShowBrandsList] = useState(false);
+  const [brands, setBrands] = useState([]);
+  const [loadingBrands, setLoadingBrands] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    setCurrentUser(JSON.parse(localStorage.getItem('user')));
+    fetchUserProfile();
+  }, []);
+
+  const fetchUserProfile = async () => {
+    try {
+      const response = await backendUrl.get('auth/influencer-register/me/');
+      setUserProfile(response.data);
+    } catch (error) {
+      console.error('Error fetching user profile:', error);
+    }
+  };
+
+  const categoryMap = {
+    1: "Entertainment",
+    2: "Tech",
+    3: "Fashion",
+    4: "Health",
+    5: "Food",
+    6: "Education",
+  };  
+
+  const fetchBrands = async () => {
+    setLoadingBrands(true);
+    try {
+      const response = await backendUrl.get('auth/brand-register/');
+      setBrands(response.data);
+    } catch (error) {
+      console.error('Error fetching brands:', error);
+      alert('Failed to load brands. Please try again.');
+    } finally {
+      setLoadingBrands(false);
+    }
+  };
+
+  const handleMessageBrands = () => {
+    setShowBrandsList(true);
+    fetchBrands();
+  };
+
+  const handleSendMessage = async (brand) => {
+    try {
+      const response = await backendUrl.post("/api/conversations/", {
+        participants: [currentUser.id, brand.user.id]
+      });
+      
+      const conversationId = response.data.id;
+      navigate(`/conversations/${conversationId}`);
+    } catch (error) {
+      console.error("Failed to create conversation:", error);
+      alert("Could not create a conversation. Please try again.");
+    }
+  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -21,7 +80,6 @@ const WelcomePage = () => {
       const response = await backendUrl.post('api/influencers/stripe-onboarding/');
       
       if (response.data.url) {
-        // Redirect to Stripe onboarding
         window.location.href = response.data.url;
       }
     } catch (error) {
@@ -31,6 +89,83 @@ const WelcomePage = () => {
       setIsLoadingStripe(false);
     }
   };
+
+  // Check if user has Pro subscription
+  const isProSubscriber = userProfile?.is_subscribed && userProfile?.subscription_plan === 'pro';
+
+  if (showBrandsList) {
+    return (
+      <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
+        {/* Header */}
+        <header className="p-4 bg-white sticky top-0 z-20">
+          <div className="container mx-auto">
+            <div className="flex items-center">
+              <button
+                onClick={() => setShowBrandsList(false)}
+                className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer mr-4"
+              >
+                <ArrowLeft className="w-5 h-5 mr-2" />
+                <span>Back to Home</span>
+              </button>
+              <h1 className="text-xl font-semibold text-gray-800">Message Brands</h1>
+            </div>
+          </div>
+        </header>
+
+        {/* Brands List */}
+        <main className="flex-grow p-4 md:container md:mx-auto">
+          {loadingBrands ? (
+            <div className="flex items-center justify-center py-12">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {brands.map((brand, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
+                >
+                  <div className="flex items-center mb-4">
+                    <div className="w-12 h-12 rounded-full overflow-hidden mr-3 bg-gray-200">
+                      {brand.user?.profile_picture ? (
+                        <img 
+                          src={brand.user.profile_picture} 
+                          alt={brand.company_name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-gray-400">
+                          <User className="w-6 h-6" />
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex-grow">
+                      <h3 className="font-semibold text-gray-800 text-lg">{brand.company_name}</h3>
+                      <p className="text-gray-500 text-sm">{categoryMap[brand.category]}</p>
+                    </div>
+                  </div>
+                  
+                  <button
+                    onClick={() => handleSendMessage(brand)}
+                    className="w-full flex items-center justify-center py-2 px-4 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors duration-200 cursor-pointer"
+                  >
+                    <Send className="w-4 h-4 mr-2" />
+                    Send Message
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+          
+          {!loadingBrands && brands.length === 0 && (
+            <div className="text-center py-12">
+              <p className="text-gray-500">No brands available at the moment.</p>
+            </div>
+          )}
+        </main>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
@@ -76,6 +211,10 @@ const WelcomePage = () => {
                 <Briefcase className="w-5 h-5 mr-1" />
                 <span>My Portfolio</span>
               </a>
+              <a href="/MySubscriptionPage" className="flex items-center text-gray-500">
+                <Crown className="w-5 h-5 mr-1" />
+                <span>My Subscription</span>
+              </a>
               <a href="/profile" className="flex items-center text-gray-500">
                 <User className="w-5 h-5 mr-1" />
                 <span>Profile</span>
@@ -107,6 +246,10 @@ const WelcomePage = () => {
               <Briefcase className="w-6 h-6 mr-3" />
               <span>My Portfolio</span>
             </a>
+            <a href="/MySubscriptionPage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+              <Crown className="w-6 h-6 mr-3" />
+              <span>My Subscription</span>
+            </a>
             <a href="/profile" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
               <User className="w-6 h-6 mr-3" />
               <span>Profile</span>
@@ -115,7 +258,6 @@ const WelcomePage = () => {
         </div>
       )}
 
-      
       {/* Main Content */}
       <main className="flex-grow p-4 md:container md:mx-auto">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-normal mb-4 md:mb-8">Set up your Account/Profile</h2>
@@ -153,6 +295,55 @@ const WelcomePage = () => {
             </div>
           </button>
         </div>
+
+        {/* Pro Subscriber Feature - Message Brands */}
+        {isProSubscriber && (
+          <div className="mt-8">
+            <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg p-6 text-white">
+              <div className="flex items-center mb-4">
+                <Crown className="w-6 h-6 mr-2" />
+                <h3 className="text-xl font-semibold">Pro Feature</h3>
+              </div>
+              <p className="mb-4">As a Pro subscriber, you can directly message brands to start conversations and collaborations!</p>
+              <div className="flex flex-col sm:flex-row gap-3">
+                <button
+                  onClick={handleMessageBrands}
+                  className="flex items-center justify-center px-6 py-3 bg-white text-pink-600 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer font-medium"
+                >
+                  <Send className="w-5 h-5 mr-2" />
+                  Message Brands
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Show subscription prompt for non-Pro users */}
+        {userProfile && !isProSubscriber && (
+          <div className="mt-8">
+            <div className="bg-gray-100 rounded-lg p-6 border-2 border-dashed border-gray-300">
+              <div className="flex items-center mb-4">
+                <Crown className="w-6 h-6 mr-2 text-gray-400" />
+                <h3 className="text-xl font-semibold text-gray-600">Unlock Pro Features</h3>
+              </div>
+              <p className="text-gray-600 mb-4">Upgrade to Pro to directly message brands and unlock exclusive collaboration opportunities!</p>
+              <button
+                onClick={() => navigate('/MySubscriptionPage')}
+                className="flex items-center px-6 py-3 bg-pink-500 text-white rounded-lg hover:bg-pink-600 transition-colors duration-200 cursor-pointer font-medium"
+              >
+                <Crown className="w-5 h-5 mr-2" />
+                Upgrade to Pro
+              </button>
+            </div>
+          </div>
+        )}
+
+        {!userProfile && (
+          <div className="flex justify-center mt-20">
+            <div className="animate-spin rounded-full h-7 w-7 md:h-10 md:w-10 border-t-2 border-b-2 border-pink-500"></div>
+          </div>
+        )}
+
       </main>
     </div>
   );

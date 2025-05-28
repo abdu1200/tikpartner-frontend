@@ -1,6 +1,9 @@
 import { useState, useEffect } from 'react';
 import backendUrl from '../../utils/backendUrl';
 import { Link } from 'react-router-dom';
+import { ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import MessageNotifications from '../MessageNotifications';
 
 function ConversationList() {
   const [conversations, setConversations] = useState([]);
@@ -8,6 +11,7 @@ function ConversationList() {
   const [currentUser, setCurrentUser] = useState(null);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
   
   useEffect(() => {
     setCurrentUser(JSON.parse(localStorage.getItem('user')));
@@ -50,19 +54,25 @@ function ConversationList() {
   
   return (
     <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
-      <main className="flex-grow w-full px-4 py-6">
+      <header className="p-4">
+        <div className="container mx-auto">
+          <button
+            onClick={() => navigate('/WelcomePage')}
+            className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="w-5 h-5 mr-2" />
+            <span>Go Back</span>
+          </button>
+        </div>
+      </header>
+      <main className="flex-grow w-full px-4">
         <div className="w-full mx-auto md:max-w-xl lg:max-w-2xlmd:bg-pink-50 lg:bg-pink-50 md:shadow-md lg:shadow-lg md:rounded-xl lg:rounded-xl md:p-6 lg:p-8 flex flex-col h-[calc(100vh-3rem)] ">
           {/* Header */}
-          <div className="flex items-center justify-between px-4 py-3 border-b border-gray-200">
+          <div className="flex items-center justify-between px-4 border-b border-gray-200">
             <div className="flex items-center">
               <h1 className="text-2xl font-medium">Messages</h1>
             </div>
-            <button className="p-2 cursor-pointer">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-                <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-              </svg>
-            </button>
+            <MessageNotifications />
           </div>
           
           {/* Search Bar */}
@@ -70,7 +80,7 @@ function ConversationList() {
             <div className="relative flex items-center">
               <input 
                 type="text" 
-                placeholder="Search message" 
+                placeholder="Search name" 
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="w-full py-3 px-4 bg-pink-100 text-gray-700 rounded-full focus:outline-none"

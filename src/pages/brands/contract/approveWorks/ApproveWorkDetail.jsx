@@ -290,7 +290,7 @@ const ContractDetailPage = () => {
             Revision Required
           </button>
 
-          <button onClick={handleViewDeliverables} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
+          <button onClick={handleViewDeliverables} className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer">
             View Deliverables
           </button>
         </div>

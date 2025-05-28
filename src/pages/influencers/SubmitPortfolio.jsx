@@ -9,7 +9,7 @@ const SubmitPortfolio = () => {
   const [portfolioTitle, setPortfolioTitle] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
-  const [success, setSuccess] = useState(false);
+  //const [success, setSuccess] = useState(false);
   const navigate = useNavigate();
 
 
@@ -84,58 +84,58 @@ const SubmitPortfolio = () => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
   };
 
-  if (success) {
-    return (
-      <div className="min-h-screen bg-pink-50 flex flex-col">
-        {/* Header */}
-        <header className="p-4 bg-white">
-          <div className="container mx-auto">
-            <button
-              onClick={() => navigate('/WelcomePage')} 
-              className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
-            >
-              <ArrowLeft className="w-5 h-5 mr-2" />
-              <span>Back to Home Page</span>
-            </button>
-          </div>
-        </header>
+  // if (success) {
+  //   return (
+  //     <div className="min-h-screen bg-pink-50 flex flex-col">
+  //       {/* Header */}
+  //       <header className="p-4 bg-white">
+  //         <div className="container mx-auto">
+  //           <button
+  //             onClick={() => navigate('/WelcomePage')} 
+  //             className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
+  //           >
+  //             <ArrowLeft className="w-5 h-5 mr-2" />
+  //             <span>Go Back</span>
+  //           </button>
+  //         </div>
+  //       </header>
 
-        {/* Success Content */}
-        <main className="flex-grow flex items-center justify-center p-4">
-          <div className="max-w-md w-full">
-            <div className="bg-white rounded-xl shadow-lg p-8 text-center">
-              <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
-              <h2 className="text-2xl font-bold text-gray-800 mb-2">
-                Portfolio Submitted!
-              </h2>
-              <p className="text-gray-600 mb-6">
-                Your portfolio has been successfully submitted. Brands can now view your work when considering you for partnerships.
-              </p>
-              <button
-                onClick={() => navigate('/WelcomePage')} 
-                className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:sbg-pink-600 transition-colors cursor-pointer"
-              >
-                Back to Home Page
-              </button>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
+  //       {/* Success Content */}
+  //       <main className="flex-grow flex items-center justify-center p-4">
+  //         <div className="max-w-md w-full">
+  //           <div className="bg-white rounded-xl shadow-lg p-8 text-center">
+  //             <CheckCircle className="w-16 h-16 mx-auto mb-4 text-green-500" />
+  //             <h2 className="text-2xl font-bold text-gray-800 mb-2">
+  //               Portfolio Submitted!
+  //             </h2>
+  //             <p className="text-gray-600 mb-6">
+  //               Your portfolio has been successfully submitted. Brands can now view your work when considering you for partnerships.
+  //             </p>
+  //             <button
+  //               onClick={() => navigate('/WelcomePage')} 
+  //               className="bg-pink-500 text-white px-6 py-2 rounded-lg hover:sbg-pink-600 transition-colors cursor-pointer"
+  //             >
+  //               Go Back
+  //             </button>
+  //           </div>
+  //         </div>
+  //       </main>
+  //     </div>
+  //   );
+  // }
 
   return (
-    <div className="min-h-screen bg-pink-50 flex flex-col font-sans">
+    <div className="min-h-screen bg-pink-50 flex flex-col font-outfit">
       {/* Header */}
       <header className="p-4 bg-white">
         <div className="container mx-auto">
           <button
-            onClick={() => navigate('/WelcomePage')} 
+            onClick={() => navigate(-1)} 
             className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer"
             disabled={isSubmitting}
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
-            <span>Back to Home Page</span>
+            <span>Go Back</span>
           </button>
         </div>
       </header>
@@ -145,7 +145,7 @@ const SubmitPortfolio = () => {
         <div className="max-w-2xl mx-auto">
           <div className="bg-white rounded-xl shadow-lg overflow-hidden">
             {/* Page Header */}
-            <div className="bg-pink-400 p-6 text-white">
+            <div className="bg-pink-400 p-3 md:p-6 text-white">
               <div className="flex items-center">
                 <Upload className="w-8 h-8 mr-3" />
                 <div>
@@ -174,8 +174,8 @@ const SubmitPortfolio = () => {
                   type="text"
                   value={portfolioTitle}
                   onChange={(e) => setPortfolioTitle(e.target.value)}
-                  placeholder="Enter a title for your portfolio (e.g., 'Fashion Content Portfolio 2024')"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
+                  placeholder="Enter a title for your portfolio"
+                  className="w-full px-4 p-2 md:py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500"
                   disabled={isSubmitting}
                   required
                 />
@@ -284,9 +284,7 @@ const SubmitPortfolio = () => {
           <div className="mt-6 bg-pink-50 border border-pink-200 rounded-lg p-4">
             <h3 className="text-sm font-medium text-pink-800 mb-2">Portfolio Guidelines</h3>
             <ul className="text-sm text-pink-700 space-y-1">
-              <li>• Upload your best and most recent content(photos, videos, etc.)</li>
-              <li>• Ensure files are high quality and properly formatted</li>
-              <li>• Choose a descriptive title that represents your work</li>
+              <li>• Upload your best and most recent content(photos, videos..)</li>
               <li>• Maximum file size: 10MB per file</li>
             </ul>
           </div>

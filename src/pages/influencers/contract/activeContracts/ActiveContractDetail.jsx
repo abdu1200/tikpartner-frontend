@@ -290,7 +290,7 @@ const ContractDetailPage = () => {
            className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"
            disabled={isCancelling}
            > 
-            {contract.deliverable_status == "submitted" || isUpdate ? 'Update Deliverable(s)' : 'Submit Deliverable(s)' } 
+            {contract.deliverable_status == "submitted" || isUpdate ? 'Resubmit Deliverable(s)' : 'Submit Deliverable(s)' } 
           </button>
         </div>
 
