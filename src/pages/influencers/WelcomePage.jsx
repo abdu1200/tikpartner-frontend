@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, Upload, Crown, Send, ArrowLeft } from 'lucide-react';
+import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, CheckCircle, Upload, Crown, Send } from 'lucide-react';
 import agreementIcon from '../../assets/agreement.jpg';
 import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom';
@@ -7,67 +7,31 @@ import MessageNotifications from '../../components/MessageNotifications';
 
 const WelcomePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [isLoadingStripe, setIsLoadingStripe] = useState(false);
-  const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [showBrandsList, setShowBrandsList] = useState(false);
-  const [brands, setBrands] = useState([]);
-  const [loadingBrands, setLoadingBrands] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentUser(JSON.parse(localStorage.getItem('user')));
     fetchUserProfile();
   }, []);
 
   const fetchUserProfile = async () => {
     try {
+      setIsLoading(true);
       const response = await backendUrl.get('auth/influencer-register/me/');
+      console.log("hi", response.data);
       setUserProfile(response.data);
     } catch (error) {
       console.error('Error fetching user profile:', error);
-    }
-  };
-
-  const categoryMap = {
-    1: "Entertainment",
-    2: "Tech",
-    3: "Fashion",
-    4: "Health",
-    5: "Food",
-    6: "Education",
-  };  
-
-  const fetchBrands = async () => {
-    setLoadingBrands(true);
-    try {
-      const response = await backendUrl.get('auth/brand-register/');
-      setBrands(response.data);
-    } catch (error) {
-      console.error('Error fetching brands:', error);
-      alert('Failed to load brands. Please try again.');
     } finally {
-      setLoadingBrands(false);
+      setIsLoading(false);
     }
   };
 
   const handleMessageBrands = () => {
     setShowBrandsList(true);
-    fetchBrands();
-  };
-
-  const handleSendMessage = async (brand) => {
-    try {
-      const response = await backendUrl.post("/api/conversations/", {
-        participants: [currentUser.id, brand.user.id]
-      });
-      
-      const conversationId = response.data.id;
-      navigate(`/conversations/${conversationId}`);
-    } catch (error) {
-      console.error("Failed to create conversation:", error);
-      alert("Could not create a conversation. Please try again.");
-    }
   };
 
   const toggleMobileMenu = () => {
@@ -93,78 +57,9 @@ const WelcomePage = () => {
   // Check if user has Pro subscription
   const isProSubscriber = userProfile?.is_subscribed && userProfile?.subscription_plan === 'pro';
 
+  // If showing brands list, render the MessageBrands component
   if (showBrandsList) {
-    return (
-      <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
-        {/* Header */}
-        <header className="p-4 bg-white sticky top-0 z-20">
-          <div className="container mx-auto">
-            <div className="flex items-center">
-              <button
-                onClick={() => setShowBrandsList(false)}
-                className="flex items-center text-gray-600 hover:text-gray-800 transition-colors cursor-pointer mr-4"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                <span>Back to Home</span>
-              </button>
-              <h1 className="text-xl font-semibold text-gray-800">Message Brands</h1>
-            </div>
-          </div>
-        </header>
-
-        {/* Brands List */}
-        <main className="flex-grow p-4 md:container md:mx-auto">
-          {loadingBrands ? (
-            <div className="flex items-center justify-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-500"></div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {brands.map((brand, index) => (
-                <div
-                  key={index}
-                  className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow duration-200"
-                >
-                  <div className="flex items-center mb-4">
-                    <div className="w-12 h-12 rounded-full overflow-hidden mr-3 bg-gray-200">
-                      {brand.user?.profile_picture ? (
-                        <img 
-                          src={brand.user.profile_picture} 
-                          alt={brand.company_name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-gray-400">
-                          <User className="w-6 h-6" />
-                        </div>
-                      )}
-                    </div>
-                    <div className="flex-grow">
-                      <h3 className="font-semibold text-gray-800 text-lg">{brand.company_name}</h3>
-                      <p className="text-gray-500 text-sm">{categoryMap[brand.category]}</p>
-                    </div>
-                  </div>
-                  
-                  <button
-                    onClick={() => handleSendMessage(brand)}
-                    className="w-full flex items-center justify-center py-2 px-4 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors duration-200 cursor-pointer"
-                  >
-                    <Send className="w-4 h-4 mr-2" />
-                    Send Message
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-          
-          {!loadingBrands && brands.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-500">No brands available at the moment.</p>
-            </div>
-          )}
-        </main>
-      </div>
-    );
+    navigate('/MessageBrands')
   }
 
   return (
@@ -267,24 +162,38 @@ const WelcomePage = () => {
           {/* Set up Stripe Account Button */}
           <button
             onClick={handleStripeSetup}
-            disabled={isLoadingStripe}
-            className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+            disabled={isLoading || isLoadingStripe || userProfile?.onboarded}
+            className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
-            <CreditCard className="w-6 h-6 mr-3 text-pink-500" />
+            {userProfile?.onboarded ? (
+              <CheckCircle className="w-10 h-10 mr-3 text-green-500" />
+            ) : (
+              <CreditCard className="w-6 h-6 mr-3 text-pink-500" />
+            )}
+            
             <div className="text-left">
-              <div className="font-medium text-gray-800">
-                {isLoadingStripe ? 'Setting up...' : 'Set up Stripe account'}
-              </div>
-              <div className="text-sm text-gray-500">
-                Connect your bank account to receive payments
-              </div>
+              {userProfile?.onboarded ? (
+                <div className="text-sm text-gray-500">
+                  You have connected and onboarded your Stripe account to the platform. You're all set!
+                </div>
+              ) : (
+                <>
+                  <div className="font-medium text-gray-800">
+                    {isLoadingStripe ? 'Setting up...' : 'Set up Stripe account'}
+                  </div>
+                  <div className="text-sm text-gray-500">
+                    Connect your bank account to receive payments
+                  </div>
+                </>
+              )}
             </div>
           </button>
 
           {/* Submit Portfolio Button */}
           <button
             onClick={() => navigate('/SubmitPortfolioPage')} 
-            className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 cursor-pointer"
+            disabled={isLoading}
+            className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             <Upload className="w-6 h-6 mr-3 text-pink-500" />
             <div className="text-left">
@@ -299,7 +208,7 @@ const WelcomePage = () => {
         {/* Pro Subscriber Feature - Message Brands */}
         {isProSubscriber && (
           <div className="mt-8">
-            <div className="bg-gradient-to-r from-pink-500 to-purple-600 rounded-lg p-6 text-white">
+            <div className="bg-gradient-to-r from-pink-500 to-pink-400 rounded-lg p-6 text-white">
               <div className="flex items-center mb-4">
                 <Crown className="w-6 h-6 mr-2" />
                 <h3 className="text-xl font-semibold">Pro Feature</h3>

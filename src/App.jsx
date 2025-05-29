@@ -23,6 +23,7 @@ import StripeSuccessPage from './pages/influencers/StripeSuccess'
 import SubmitPortfolioPage from './pages/influencers/SubmitPortfolio'
 import MyPortfolioPage from './pages/influencers/MyPortfolio'
 import MySubscriptionPage from './pages/influencers/MySubscription'
+import MessageBrands from './pages/influencers/MessageBrands'
 
 
 import ConversationListPage from './components/conversation/ConversationList'
@@ -91,6 +92,7 @@ function App() {
       <Route path="/SubmitPortfolioPage" element={<SubmitPortfolioPage />} />
       <Route path="/MyPortfolioPage" element={<MyPortfolioPage />} />
       <Route path="/MySubscriptionPage" element={<MySubscriptionPage />} />
+      <Route path="/MessageBrands" element={<MessageBrands />} />
 
 
       <Route path="/ConversationList" element={<ConversationListPage />} />
