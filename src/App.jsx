@@ -16,6 +16,8 @@ import SearchInfluencersPage from './pages/brands/SearchInfluencer/SearchInfluen
 import SendContractPage from './pages/brands/contract/SendContract'
 import WorkHistoryPage from './pages/brands/WorkHistory'
 import PortfolioPage from './pages/brands/Portfolio'
+import MyProfilePage from './pages/brands/ProfilePage'
+import BrandUpdateForm from './pages/brands/updateProfile/UpdateForm'
 
 
 import WelcomePage from './pages/influencers/WelcomePage'
@@ -24,6 +26,10 @@ import SubmitPortfolioPage from './pages/influencers/SubmitPortfolio'
 import MyPortfolioPage from './pages/influencers/MyPortfolio'
 import MySubscriptionPage from './pages/influencers/MySubscription'
 import MessageBrands from './pages/influencers/MessageBrands'
+import InfMyProfilePage from './pages/influencers/ProfilePage'
+import InfluencerUpdateForm from './pages/influencers/updateProfile/UpdateForm'
+
+
 
 
 import ConversationListPage from './components/conversation/ConversationList'
@@ -85,6 +91,8 @@ function App() {
       <Route path="/SendContract/:id" element={<SendContractPage />} />
       <Route path="/WorkHistoryPage/:influencerUserId" element={<WorkHistoryPage />} />
       <Route path="/PortfolioPage/:influencerId" element={<PortfolioPage />} />
+      <Route path="/MyProfilePage" element={<MyProfilePage />} />
+      <Route path="/BrandUpdate" element={<BrandUpdateForm />} />
 
 
       <Route path="/WelcomePage" element={<WelcomePage />} />
@@ -93,6 +101,10 @@ function App() {
       <Route path="/MyPortfolioPage" element={<MyPortfolioPage />} />
       <Route path="/MySubscriptionPage" element={<MySubscriptionPage />} />
       <Route path="/MessageBrands" element={<MessageBrands />} />
+      <Route path="/InfMyProfilePage" element={<InfMyProfilePage />} />
+      <Route path="/InfluencerUpdate" element={<InfluencerUpdateForm />} />
+
+
 
 
       <Route path="/ConversationList" element={<ConversationListPage />} />

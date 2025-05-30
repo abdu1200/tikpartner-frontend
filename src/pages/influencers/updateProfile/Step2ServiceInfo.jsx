@@ -206,14 +206,11 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
       {/* Form Content */}
       <div className="mb-10">
         <h1 className="text-2xl text-gray-800 md:text-3xl lg:text-4xl font-normal mb-[12px] md:text-center">About your service</h1>
-        <p className="text-gray-700 text-sm mb-[48px] md:text-center md:text-lg">Tell us a little bit about your account and service.</p>
+        <p className="text-gray-700 text-sm mb-[48px] md:text-center md:text-lg">Update your account and service details.</p>
         
         <form onSubmit={(e) => {
           e.preventDefault();
-          if (!formData.languages?.length) {
-            // Add this line to show required message
-            document.getElementById('languagesError').classList.remove('hidden');
-          } else if(!formData.tiktokUsername) {
+          if(!formData.tiktokUsername) {
             document.getElementById('tiktokError').classList.remove('hidden');
           } 
           else {
@@ -221,7 +218,7 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
           }
 
         }} className="md:max-w-lg md:mx-auto">
-        
+          
           <div className="mb-[50px] md:mb-12">
             <label className="block text-gray-700 text-sm mb-[4px] md:text-lg">What is your content about?</label>
             <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-3 lg:grid-cols-4">
@@ -239,8 +236,6 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
             </div>
           </div>
 
-
-          
           {/* Languages Dropdown */}
           <div className="mb-[40px] md:mb-12">
             <label className="block text-gray-700 text-sm mb-[4px] md:text-lg">What languages can you speak?</label>
@@ -248,7 +243,6 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
             <div className="relative">
               <button
                 type="button"
-                required
                 onClick={() => setShowLanguages(!showLanguages)}
                 className="w-full h-[44px] px-4 py-2 text-left flex items-center justify-between border border-gray-300 rounded md:rounded-lg focus:outline-none focus:ring-1 focus:ring-pink-600"
               >
@@ -302,16 +296,20 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
               </div>
             )}
           </div>
-          
-          {!formData.languages?.length && 
-            <p id="languagesError" className="text-red-500 text-sm mt-[-35px] hidden">Please select at least one language</p>
-          }
 
-
+          {/* Current TikTok Username Display */}
+          {formData.tiktokUsername && (
+            <div className="mb-[20px] md:mb-6">
+              <label className="block text-gray-700 text-sm mb-[4px] md:text-lg">Current TikTok Username</label>
+              <div className="w-full p-3 h-[44px] md:p-4 border border-gray-200 rounded md:rounded-lg bg-gray-50 flex items-center">
+                <span className="text-gray-700">@{formData.tiktokUsername}</span>
+              </div>
+            </div>
+          )}
           
-          {/* TikTok Connect Button */}
+          {/* TikTok Connect Section */}
           <div className="mb-[40px] md:mb-12">
-            <label className="block text-gray-700 text-sm mb-[4px] md:text-lg">Connect your TikTok account</label>
+            <label className="block text-gray-700 text-sm mb-[4px] md:text-lg">TikTok Account</label>
             
             {!isTiktokConnected ? (
               <div>
@@ -326,7 +324,7 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
                     <span>Connecting...</span>
                   ) : (
                     <>
-                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">
+                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">          
                         <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.9 2.9 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
                       </svg>
                       Connect with TikTok
@@ -338,24 +336,24 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
                 }
               </div>
             ) : (
-              <div className="flex items-center justify-between border border-green-200 bg-green-50 p-3 rounded md:rounded-lg">
-                <div className="flex items-center">
-                  <svg className="w-5 h-5 text-green-500 mr-2" viewBox="0 0 24 24" fill="currentColor">
-                    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.9 2.9 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
-                  </svg>
-                  <div>
-                    <p className="text-gray-700 text-sm font-medium">Connected: @{formData.tiktokUsername}</p>
-                    <p className="text-gray-500 text-xs">TikTok account connected successfully</p>
-                  </div>
-                </div>
+              <div>
                 <button
                   type="button"
-                  onClick={() => {
-                    updateFormData({ tiktokUsername: '' });
-                  }}
-                  className="text-sm text-pink-600 hover:text-pink-700"
+                  onClick={connectTikTok}
+                  disabled={isConnectingTikTok}
+                  className={`w-full h-[50px] px-4 py-2 flex items-center justify-center border rounded md:rounded-lg focus:outline-none focus:ring-1 focus:ring-pink-600 cursor-pointer 
+                  ${isConnectingTikTok ? 'bg-gray-100 text-gray-500' : 'bg-pink-600 text-white hover:bg-gray-800'} transition duration-200`}
                 >
-                  Disconnect
+                  {isConnectingTikTok ? (
+                    <span>Connecting...</span>
+                  ) : (
+                    <>
+                      <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="currentColor">          
+                        <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.9 2.9 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
+                      </svg>
+                      Change Tiktok account 
+                    </>
+                  )}
                 </button>
               </div>
             )}

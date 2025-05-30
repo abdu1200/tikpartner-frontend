@@ -220,7 +220,7 @@ const SearchInfluencersPage = () => {
                 <MessageCircle className="w-5 h-5 mr-1" />
                 <span>Message</span>
               </Link>
-              <Link to="/profile" className="flex items-center text-gray-500">
+              <Link to="/MyProfilePage" className="flex items-center text-gray-500">
                 <User className="w-5 h-5 mr-1" />
                 <span>Profile</span>
               </Link>
@@ -251,7 +251,7 @@ const SearchInfluencersPage = () => {
               <MessageCircle className="w-6 h-6 mr-3" />
               <span>Message</span>
             </Link>
-            <Link to="/profile" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
+            <Link to="/MyProfilePage" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
               <User className="w-6 h-6 mr-3" />
               <span>Profile</span>
             </Link>
