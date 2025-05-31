@@ -34,6 +34,8 @@ import InfluencerUpdateForm from './pages/influencers/updateProfile/UpdateForm'
 
 import ConversationListPage from './components/conversation/ConversationList'
 import ChatPage from './components/conversation/Chat'
+import DisputePage from './components/DisputeManagement'
+
 
 import ContractsPage from './pages/brands/contract/Contracts'
 import RequestedOffersList from './pages/brands/contract/requestedOffers/RequestedOffersList'
@@ -109,7 +111,8 @@ function App() {
 
       <Route path="/ConversationList" element={<ConversationListPage />} />
       <Route path="/conversations/:conversationId" element={<ChatPage />} />
-      
+      <Route path="/DisputePage" element={<DisputePage />} />
+
       <Route path="/Contracts" element={<ContractsPage />} />
       <Route path="/RequestedOffersList" element={<RequestedOffersList />} />
       <Route path="/RequestedOffer/:id" element={<RequestedOfferDetail />} />

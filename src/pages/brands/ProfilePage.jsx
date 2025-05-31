@@ -14,11 +14,6 @@ const ProfilePage = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const handleDisputeManagement = () => {
-    // Navigate to dispute management page
-    console.log('Dispute management clicked');
-    // navigate('/DisputeManagementPage');
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
@@ -126,7 +121,7 @@ const ProfilePage = () => {
 
           {/* Dispute Management Button */}
           <button
-            onClick={handleDisputeManagement}
+            onClick={() => navigate('/DisputePage')}
             className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             <AlertTriangle className="w-6 h-6 mr-3 text-pink-500" />

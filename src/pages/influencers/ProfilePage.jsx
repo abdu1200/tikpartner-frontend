@@ -62,11 +62,6 @@ const ProfilePage = () => {
     // This could trigger a new Stripe onboarding flow
   };
 
-  const handleDisputeManagement = () => {
-    // Navigate to dispute management page
-    console.log('Dispute management clicked');
-    // navigate('/DisputeManagementPage');
-  };
 
   return (
     <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
@@ -171,8 +166,7 @@ const ProfilePage = () => {
       {/* Main Content */}
       <main className="flex-grow p-4 md:container md:mx-auto">
         <h2 className="text-xl sm:text-2xl md:text-3xl font-normal mb-4 md:mb-8">Profile Management</h2>
-        
-        {userProfile && 
+         
          <div className="grid grid-cols-1 gap-4 max-w-2xl">
           
           {/* Update Profile Info Button */}
@@ -205,7 +199,7 @@ const ProfilePage = () => {
 
           {/* Dispute Management Button */}
           <button
-            onClick={handleDisputeManagement}
+            onClick={() => navigate('/DisputePage')}
             className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             <AlertTriangle className="w-6 h-6 mr-3 text-pink-500" />
@@ -218,13 +212,6 @@ const ProfilePage = () => {
           </button>
         </div> 
         
-        }
-
-        {!userProfile && (
-          <div className="flex justify-center mt-20">
-            <div className="animate-spin rounded-full h-7 w-7 md:h-10 md:w-10 border-t-2 border-b-2 border-pink-500"></div>
-          </div>
-        )}
       </main>
     </div>
   );

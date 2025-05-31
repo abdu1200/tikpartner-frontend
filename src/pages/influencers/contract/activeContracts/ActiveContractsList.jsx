@@ -50,7 +50,7 @@ const ActiveContractsList = () => {
        <div className="w-full md:max-w-lg lg:max-w-xl md:my-10 md:shadow-lg md:rounded-lg md:overflow-hidden bg-pink-50">
         {/* Header */}
         <div className="flex items-center p-4 border-b border-gray-200 bg-pink-100">
-          <button onClick={() => navigate('/Contracts')} className="flex items-center mr-2 cursor-pointer">
+          <button onClick={() => navigate('/InfContracts')} className="flex items-center mr-2 cursor-pointer">
             <ChevronLeft size={20} />
           </button>
           <span className="text-base ml-1">Active Contracts</span>
