@@ -245,7 +245,6 @@ const DisputeManagement = () => {
             <h4 className="text-sm font-medium text-blue-900 mb-1">What happens next?</h4>
             <ul className="text-xs text-blue-800 space-y-1">
               <li>• Our team will review your dispute within 24-48 hours</li>
-              <li>• You'll receive an email confirmation with your dispute ID</li>
               <li>• We may contact you for additional information if needed</li>
               <li>• You'll be notified of the resolution via email</li>
             </ul>

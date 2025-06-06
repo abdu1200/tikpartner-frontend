@@ -36,7 +36,7 @@ function ChatHeader({ otherUserName, otherUserAvatar }) {
         <h1 className="text-lg font-medium">{otherUserName}</h1>
       </div>
       
-      <button className="ml-auto cursor-pointer">
+      {/* <button className="ml-auto cursor-pointer">
         <svg 
           xmlns="http://www.w3.org/2000/svg" 
           width="24" 
@@ -52,7 +52,7 @@ function ChatHeader({ otherUserName, otherUserAvatar }) {
           <circle cx="12" cy="5" r="1" />
           <circle cx="12" cy="19" r="1" />
         </svg>
-      </button>
+      </button> */}
     </div>
   );
 }

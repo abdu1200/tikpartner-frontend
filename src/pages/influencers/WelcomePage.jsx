@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, CheckCircle, Upload, Crown, Send } from 'lucide-react';
+import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, CreditCard, CheckCircle, Upload, Crown, Send, LogOut } from 'lucide-react';
 import agreementIcon from '../../assets/agreement.jpg';
 import backendUrl from '../../utils/backendUrl';
 import { useNavigate } from 'react-router-dom';
@@ -11,7 +11,6 @@ const WelcomePage = () => {
   const [isLoadingStripe, setIsLoadingStripe] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
   const [showBrandsList, setShowBrandsList] = useState(false);
-  const [profileImage, setProfileImage] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -23,13 +22,19 @@ const WelcomePage = () => {
       setIsLoading(true);
       const response = await backendUrl.get('auth/influencer-register/me/');
       setUserProfile(response.data);
-      setProfileImage(response.data.user.profile_picture || null);
 
     } catch (error) {
       console.error('Error fetching user profile:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+
+  const handleLogOut = async () => {
+    // Clear any existing tokens/data first
+    localStorage.clear();
+    navigate('/')
   };
 
   // Simple helper function to display image URL correctly
@@ -132,9 +137,9 @@ const WelcomePage = () => {
                 <span>My Subscription</span>
               </a>
               <a href="/InfMyProfilePage" className="flex items-center text-gray-500">
-              {profileImage ? (
+              {userProfile?.user?.profile_picture ? (
                 <img
-                  src={getImageDisplayUrl(userProfile?.user?.profile_picture)}
+                  src={getImageDisplayUrl(userProfile.user.profile_picture)}
                   alt="Profile preview"
                   className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-1"
                 /> ) : ( <User className="w-5 h-5 mr-1" /> )}
@@ -171,15 +176,22 @@ const WelcomePage = () => {
               <Crown className="w-6 h-6 mr-3" />
               <span>My Subscription</span>
             </a>
-            <a href="/InfMyProfilePage" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
-            {profileImage ? (
+            <a href="/InfMyProfilePage" className="flex items-center p-3 text-gray-500 border-b " onClick={toggleMobileMenu}>
+            {userProfile?.user?.profile_picture  ? (
               <img
-                src={getImageDisplayUrl(profileImage)}
+                src={getImageDisplayUrl(userProfile.user.profile_picture)}
                 alt="Profile preview"
                 className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
               /> ) : (<User className="w-5 h-5 mr-1" />)}
               <span>Profile</span>
             </a>
+            <button
+              onClick={handleLogOut}
+              className="flex items-center p-3 text-gray-500 border-b cursor-pointer"
+            >
+              <LogOut className="w-6 h-6 mr-3" />
+              <span>Log out</span>
+            </button>
           </nav>
         </div>
       )}

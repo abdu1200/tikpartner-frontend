@@ -3,11 +3,13 @@ import Step1PersonalInfo from './Step1PersonalInfo';
 import Step2ServiceInfo from './Step2ServiceInfo';
 import Step3ServiceDetails from './Step3ServiceDetails';
 import backendUrl from '../../../utils/backendUrl';
+import { useNavigate } from 'react-router-dom'; 
 
 export default function SignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Step 1 data
     username: '',
@@ -112,8 +114,8 @@ export default function SignupForm() {
       const response = await backendUrl.post('/auth/influencer-register/', requestData);
       
       console.log('Registration successful:', response.data);
-      alert('Signup successful!');
       // You could redirect to login page or dashboard here
+      navigate('/WelcomePage');
       
     } catch (err) {
       console.log('Registration error:', err.message);

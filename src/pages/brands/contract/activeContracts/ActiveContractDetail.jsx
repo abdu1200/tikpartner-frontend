@@ -36,25 +36,46 @@ const ContractDetailPage = () => {
     };
 
 
-    const handleCancel = async (id) => {
+    const cancelAndRefund = async (id) => {
+      const confirmCancel = window.confirm(
+        'Are you sure you want to cancel this contract? If so, this contract will be cancelled and your fund will be refunded'
+      );
+    
+      if (!confirmCancel) return;
+    
       setIsCancelling(true);
-      setError(null)
-
+      setError(null);
+    
       try {
+        // Cancel contract
         const response = await backendUrl.delete(`/api/active_contracts/${id}/`);
         console.log('Contract cancelled successfully:', response.data);
-        
         alert("Contract cancelled successfully");
+    
+        try {
+          // Refund payment
+          const responseTwo = await backendUrl.post(
+            `/api/payments/${contract.payment_id}/refund_payment/`
+          );
+          console.log('Fund refunded successfully:', responseTwo.data);
+          alert("Fund refunded successfully");
+        } catch (error) {
+          console.error('Error refunding payment:', error.response?.data || error.message);
+          setError('Contract was cancelled, but refund failed. Please contact support.');
+          return; // stay on the page to show the error
+        }
+    
+        // Only navigate if both cancel & refund succeeded
         navigate('/ActiveContractsList');
-
+    
       } catch (error) {
         console.error('Error cancelling contract:', error.response?.data || error.message);
-        setError('Failed to cancel active contract. Please try again later.');
-
+        setError('Failed to cancel contract. Please try again later.');
       } finally {
         setIsCancelling(false);
       }
     };
+    
     
 
   
@@ -149,7 +170,7 @@ const ContractDetailPage = () => {
             Go back
           </button>
 
-          <button onClick={() => handleCancel(id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
+          <button onClick={() => cancelAndRefund(id)} className="w-full py-3 px-4 bg-pink-600 hover:bg-pink-700 transition duration-200 text-white rounded-md text-center font-medium cursor-pointer">
             {isCancelling ? (
                   <div className="flex items-center justify-center">
                     <svg className="animate-spin -ml-1 mr-2 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">

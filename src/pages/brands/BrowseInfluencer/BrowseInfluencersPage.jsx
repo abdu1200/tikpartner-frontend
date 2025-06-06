@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Home, Search, FileText, MessageCircle, User, Menu, X } from 'lucide-react';
+import { Home, Search, FileText, MessageCircle, User, Menu, X, LogOut } from 'lucide-react';
 import backendUrl from '../../../utils/backendUrl';
 import { Link } from 'react-router-dom';
 import agreementIcon from '../../../assets/agreement.jpg'
 import InfluencerCard from './InfluencerCard';
 import MessageNotifications from '../../../components/MessageNotifications';
+import { useNavigate } from 'react-router-dom';
 
 
 const BrowseInfluencersPage = () => {
@@ -12,6 +13,24 @@ const BrowseInfluencersPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const fetchBrandProfile = async () => {
+      try {
+        const response = await backendUrl.get('/auth/brand-register/me/');
+        setUserProfile(response.data);
+        console.log(response.data);
+
+      } catch (error) {
+        console.error('Error fetching brand profile:', error.response?.data);
+      }
+    };
+  
+    fetchBrandProfile();
+  }, []);
+
 
   useEffect(() => {
     const fetchInfluencers = async () => {
@@ -28,6 +47,35 @@ const BrowseInfluencersPage = () => {
 
     fetchInfluencers();
   }, []);
+
+
+  // Simple helper function to display image URL correctly
+  const getImageDisplayUrl = (imageSource) => {
+    // If no image source, return null
+    if (!imageSource) return null;
+    
+    // If it's a data URL (file preview), return as is
+    if (typeof imageSource === 'string' && imageSource.startsWith('data:')) {
+      return imageSource;
+    }
+    
+    // If it's already a complete URL, return as is
+    if (typeof imageSource === 'string' && (imageSource.startsWith('http://') || imageSource.startsWith('https://'))) {
+      return imageSource;
+    }
+    
+    // If it's something else, try to use it directly
+    return imageSource;
+  };
+
+  console.log('Profile picture:', userProfile?.user?.profile_picture);
+
+
+  const handleLogOut = async () => {
+    // Clear any existing tokens/data first
+    localStorage.clear();
+    navigate('/')
+  };
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
@@ -77,10 +125,15 @@ const BrowseInfluencersPage = () => {
                 <MessageCircle className="w-5 h-5 mr-1" />
                 <span>Message</span>
               </Link>
-              <Link to="/MyProfilePage" className="flex items-center text-gray-500">
-                <User className="w-5 h-5 mr-1" />
+              <a href="/MyProfilePage" className="flex items-center text-gray-500">
+              {userProfile?.user?.profile_picture ? (
+                <img
+                  src={getImageDisplayUrl(userProfile.user.profile_picture)}
+                  alt="Profile preview"
+                  className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-1"
+                /> ) : ( <User className="w-5 h-5 mr-1" /> )}
                 <span>Profile</span>
-              </Link>
+              </a>
               {/* Notification bell for desktop */}
               <MessageNotifications />
             </nav>
@@ -108,10 +161,22 @@ const BrowseInfluencersPage = () => {
               <MessageCircle className="w-6 h-6 mr-3" />
               <span>Message</span>
             </Link>
-            <Link to="/MyProfilePage" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
-              <User className="w-6 h-6 mr-3" />
+            <a href="/MyProfilePage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+            {userProfile?.user?.profile_picture ? (
+              <img
+                src={getImageDisplayUrl(userProfile.user.profile_picture)}
+                alt="Profile preview"
+                className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
+              /> ) : (<User className="w-6 h-6 mr-3" />)}
               <span>Profile</span>
-            </Link>
+            </a>
+            <button
+              onClick={handleLogOut}
+              className="flex items-center p-3 text-gray-500 border-b cursor-pointer"
+            >
+              <LogOut className="w-6 h-6 mr-3" />
+              <span>Log out</span>
+            </button>
           </nav>
         </div>
       )}

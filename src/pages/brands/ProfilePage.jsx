@@ -1,20 +1,62 @@
 import { useState, useEffect } from 'react';
-import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, Crown, Edit, CreditCard, AlertTriangle, Search } from 'lucide-react';
+import { Home, FileText, MessageCircle, User, Menu, X, Edit, AlertTriangle, Search, LogOut } from 'lucide-react';
 import agreementIcon from '../../assets/agreement.jpg';
 import { useNavigate } from 'react-router-dom';
 import MessageNotifications from '../../components/MessageNotifications';
 import { Link } from 'react-router-dom';
+import backendUrl from '../../utils/backendUrl';
 
 
 const ProfilePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const [userProfile, setUserProfile] = useState(null);
+
+  useEffect(() => {
+    const fetchBrandProfile = async () => {
+      try {
+        const response = await backendUrl.get('/auth/brand-register/me/');
+        setUserProfile(response.data);
+
+      } catch (error) {
+        console.error('Error fetching brand profile:', error.response?.data);
+      }
+    };
+  
+    fetchBrandProfile();
+  }, []);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
 
+  // Simple helper function to display image URL correctly
+  const getImageDisplayUrl = (imageSource) => {
+    // If no image source, return null
+    if (!imageSource) return null;
+    
+    // If it's a data URL (file preview), return as is
+    if (typeof imageSource === 'string' && imageSource.startsWith('data:')) {
+      return imageSource;
+    }
+    
+    // If it's already a complete URL, return as is
+    if (typeof imageSource === 'string' && (imageSource.startsWith('http://') || imageSource.startsWith('https://'))) {
+      return imageSource;
+    }
+    
+    // If it's something else, try to use it directly
+    return imageSource;
+  };
+
+  const handleLogOut = async () => {
+    // Clear any existing tokens/data first
+    localStorage.clear();
+    navigate('/')
+  };
+
+  
   return (
     <div className="flex flex-col min-h-screen bg-pink-50 font-outfit">
       {/* Header */}
@@ -59,10 +101,15 @@ const ProfilePage = () => {
                 <MessageCircle className="w-5 h-5 mr-1" />
                 <span>Message</span>
               </Link>
-              <Link to="/MyProfilePage" className="flex items-center text-pink-500">
-               <User className="w-5 h-5 mr-1" /> 
+              <a href="/MyProfilePage" className="flex items-center text-pink-500">
+              {userProfile?.user?.profile_picture ? (
+                <img
+                  src={getImageDisplayUrl(userProfile.user.profile_picture)}
+                  alt="Profile preview"
+                  className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-1"
+                /> ) : ( <User className="w-5 h-5 mr-1" /> )}
                 <span>Profile</span>
-              </Link>
+              </a>
               {/* Notification bell for desktop */}
               <MessageNotifications />
             </nav>
@@ -90,10 +137,22 @@ const ProfilePage = () => {
               <MessageCircle className="w-6 h-6 mr-3" />
               <span>Message</span>
             </Link>
-            <Link to="/MyProfilePage" className="flex items-center p-3 text-pink-500" onClick={toggleMobileMenu}>
-              <User className="w-5 h-5 mr-1" />
+            <a href="/MyProfilePage" className="flex items-center p-3 text-pink-500 border-b" onClick={toggleMobileMenu}>
+            {userProfile?.user?.profile_picture ? (
+              <img
+                src={getImageDisplayUrl(userProfile.user.profile_picture)}
+                alt="Profile preview"
+                className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
+              /> ) : (<User className="w-6 h-6 mr-3" />)}
               <span>Profile</span>
-            </Link>
+            </a>
+            <button
+              onClick={handleLogOut}
+              className="flex items-center p-3 text-gray-500 border-b cursor-pointer"
+            >
+              <LogOut className="w-6 h-6 mr-3" />
+              <span>Log out</span>
+            </button>
           </nav>
         </div>
       )}
@@ -130,6 +189,17 @@ const ProfilePage = () => {
               <div className="text-sm text-gray-500">
                 Manage contract disputes and resolve issues with brands
               </div>
+            </div>
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={handleLogOut}
+            className="hidden md:flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <LogOut className="w-6 h-6 mr-3 text-pink-500" />
+            <div className="text-left flex-1">
+              <div className="font-medium text-gray-800">Log out</div>
             </div>
           </button>
         </div>

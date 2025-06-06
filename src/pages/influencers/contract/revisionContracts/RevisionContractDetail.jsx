@@ -43,6 +43,13 @@ const ContractDetailPage = () => {
     };
 
     const handleCancel = async (id) => {
+
+      const confirmCancel = window.confirm(
+        'Are you sure you want to cancel this contract?'
+      );
+      
+      if (!confirmCancel) return;
+
       setIsCancelling(true);
       setError(null)
 

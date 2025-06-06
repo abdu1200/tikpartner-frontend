@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, Crown, Edit, CreditCard, AlertTriangle } from 'lucide-react';
+import { Home, FileText, MessageCircle, User, Menu, X, Briefcase, Crown, Edit, CreditCard, AlertTriangle, LogOut } from 'lucide-react';
 import agreementIcon from '../../assets/agreement.jpg';
 import { useNavigate } from 'react-router-dom';
 import MessageNotifications from '../../components/MessageNotifications';
@@ -9,8 +9,9 @@ import backendUrl from '../../utils/backendUrl';
 const ProfilePage = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [userProfile, setUserProfile] = useState(null);
-  const [profileImage, setProfileImage] = useState(null);
+  // const [profileImage, setProfileImage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [isReconnectingStripe, setIsReconnectingStripe] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -22,13 +23,35 @@ const ProfilePage = () => {
       setIsLoading(true);
       const response = await backendUrl.get('auth/influencer-register/me/');
       setUserProfile(response.data);
-      setProfileImage(response.data.user.profile_picture || null);
+      // setProfileImage(response.data.user.profile_picture || null);
 
     } catch (error) {
       console.error('Error fetching user profile:', error);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleStripeReconnect = async () => {
+    setIsReconnectingStripe(true);
+    try {
+      const response = await backendUrl.post('api/influencers/stripe-onboarding/');
+      
+      if (response.data.url) {
+        window.location.href = response.data.url;
+      }
+    } catch (error) {
+      console.error('Error Reconnecting Stripe account:', error);
+      alert('Failed to Reconnect Stripe account. Please try again.');
+    } finally {
+      setIsReconnectingStripe(false);
+    }
+  };
+
+  const handleLogOut = async () => {
+    // Clear any existing tokens/data first
+    localStorage.clear();
+    navigate('/')
   };
 
 
@@ -56,11 +79,6 @@ const ProfilePage = () => {
     setMobileMenuOpen(!mobileMenuOpen);
   };
 
-  const handleReconnectStripe = () => {
-    // Handle Stripe reconnection
-    console.log('Reconnect Stripe clicked');
-    // This could trigger a new Stripe onboarding flow
-  };
 
 
   return (
@@ -111,10 +129,10 @@ const ProfilePage = () => {
                 <Crown className="w-5 h-5 mr-1" />
                 <span>My Subscription</span>
               </a>
-              <a href="/InfMyProfilePage" className="flex items-center text-gray-500">
-              {profileImage ? (
+              <a href="/InfMyProfilePage" className="flex items-center text-pink-500">
+              {userProfile?.user?.profile_picture ? (
                 <img
-                  src={getImageDisplayUrl(userProfile?.user?.profile_picture)}
+                  src={getImageDisplayUrl(userProfile.user.profile_picture)}
                   alt="Profile preview"
                   className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-1"
                 /> ) : ( <User className="w-5 h-5 mr-1" /> )}
@@ -150,15 +168,22 @@ const ProfilePage = () => {
               <Crown className="w-6 h-6 mr-3" />
               <span>My Subscription</span>
             </a>
-            <a href="/InfMyProfilePage" className="flex items-center p-3 text-gray-500" onClick={toggleMobileMenu}>
-            {profileImage ? (
+            <a href="/InfMyProfilePage" className="flex items-center p-3 text-pink-500 border-b" onClick={toggleMobileMenu}>
+            {userProfile?.user?.profile_picture ? (
               <img
-                src={getImageDisplayUrl(profileImage)}
+                src={getImageDisplayUrl(userProfile.user.profile_picture)}
                 alt="Profile preview"
                 className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
-              /> ) : (<User className="w-5 h-5 mr-1" />)}
+              /> ) : (<User className="w-6 h-6 mr-3" />)}
               <span>Profile</span>
             </a>
+            <button
+              onClick={handleLogOut}
+              className="flex items-center p-3 text-gray-500 border-b cursor-pointer"
+            >
+              <LogOut className="w-6 h-6 mr-3" />
+              <span>Log out</span>
+            </button>
           </nav>
         </div>
       )}
@@ -185,13 +210,13 @@ const ProfilePage = () => {
 
           {/* Reconnect Stripe Account Button */}
           <button
-            onClick={handleReconnectStripe}
+            onClick={handleStripeReconnect}
             className="flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
           >
             <CreditCard className="w-6 h-6 mr-3 text-pink-500" />
             <div className="text-left flex-1">
-              <div className="font-medium text-gray-800">Reconnect Your Stripe Account</div>
-              <div className="text-sm text-gray-500">
+              <div className="font-medium text-gray-800">{isReconnectingStripe ? 'Reconnecting stripe account...' : 'Reconnect your Stripe account'}</div>
+              <div className="text-sm text-gray-500" disabled={isReconnectingStripe}>
                 Update your bank information or change payment settings
               </div>
             </div>
@@ -208,6 +233,17 @@ const ProfilePage = () => {
               <div className="text-sm text-gray-500">
                 Manage contract disputes and resolve issues with brands
               </div>
+            </div>
+          </button>
+
+          {/* Logout */}
+          <button
+            onClick={handleLogOut}
+            className="hidden md:flex items-center justify-center p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200 disabled:opacity-60 disabled:cursor-not-allowed cursor-pointer"
+          >
+            <LogOut className="w-6 h-6 mr-3 text-pink-500" />
+            <div className="text-left flex-1">
+              <div className="font-medium text-gray-800">Log out</div>
             </div>
           </button>
         </div> 

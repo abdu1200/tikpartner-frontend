@@ -19,8 +19,13 @@ function Chat() {
 
     // websocketURL
     const socketUrl = conversationId && token
-        ? `ws://127.0.0.1:8000/ws/chat/${conversationId}/?token=${token}`
+        ? `wss://tikpartner.duckdns.org/backend/ws/chat/${conversationId}/?token=${token}`
         : null;
+
+
+    // const socketUrl = conversationId && token
+    //     ? ws://127.0.0.1:8000/ws/chat/${conversationId}/?token=${token}
+    //     : null;
 
     // making the websocket connection  // sendMessage is used to send data(message or read) to the connected websocket server  // lastMessage holds the most recent message received from the server.
     // readyState indicates the current websocket connection status (e.g., OPEN, CLOSED)    // protocols is a websocket subprotocols to match server expectations. b/c the server expects a subprotocol and then the client will also expect a subprotocol

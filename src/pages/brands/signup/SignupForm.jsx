@@ -3,11 +3,14 @@ import Step1PersonalInfo from './Step1PersonalInfo';
 import Step2CompanyInfo from './Step2CompanyInfo';
 import Step3CompanyDetails from './Step3CompanyDetails';
 import backendUrl from '../../../utils/backendUrl';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function SignupForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     // Step 1 data
     username: '',
@@ -88,7 +91,9 @@ export default function SignupForm() {
       const response = await backendUrl.post('/auth/brand-register/', requestData);
       
       console.log('Registration successful:', response.data);
-      alert('Signup successful!');
+      
+      navigate('/BrowseInfluencersPage');
+
       // You could redirect to login page or dashboard here
       
     } catch (err) {
