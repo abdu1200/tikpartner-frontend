@@ -19,7 +19,7 @@ function Chat() {
 
     // websocketURL
     const socketUrl = conversationId && token
-        ? `wss://tikpartner.duckdns.org/backend/ws/chat/${conversationId}/?token=${token}`
+        ? `wss://tikbackend.onrender.com/ws/chat/${conversationId}/?token=${token}`
         : null;
 
 

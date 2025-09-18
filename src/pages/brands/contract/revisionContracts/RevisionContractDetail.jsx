@@ -282,7 +282,7 @@ const ContractDetailPage = () => {
         </div>
         
         {/* Buttons */}
-        <div className="flex space-x-3">
+        <div className="flex space-x-2 p-4">
           <button 
            onClick={openRevisionModal}
            className="w-full py-3 px-4 border border-gray-300 bg-pink-600 hover:bg-pink-700 text-white transition duration-200 rounded-md text-center font-medium mb-4 cursor-pointer"

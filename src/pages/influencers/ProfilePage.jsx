@@ -136,7 +136,7 @@ const ProfilePage = () => {
                   alt="Profile preview"
                   className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-1"
                 /> ) : ( <User className="w-5 h-5 mr-1" /> )}
-                <span>Profile</span>
+                <span>{userProfile?.user?.first_name}</span>
               </a>
               <MessageNotifications />
             </nav>
@@ -147,43 +147,48 @@ const ProfilePage = () => {
       {/* Mobile Navigation Menu */}
       {mobileMenuOpen && (
         <div className="fixed inset-0 bg-pink-50 z-10 pt-16 lg:hidden">
-          <nav className="flex flex-col p-4">
-            <a href="/WelcomePage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
-              <Home className="w-6 h-6 mr-3" />
-              <span>Home</span>
-            </a>
-            <a href="/InfContracts" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
-              <FileText className="w-6 h-6 mr-3" />
-              <span>Contracts</span>
-            </a>
-            <a href="/ConversationList" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
-              <MessageCircle className="w-6 h-6 mr-3" />
-              <span>Message</span>
-            </a>
-            <a href="/MyPortfolioPage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
-              <Briefcase className="w-6 h-6 mr-3" />
-              <span>My Portfolio</span>
-            </a>
-            <a href="/MySubscriptionPage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
-              <Crown className="w-6 h-6 mr-3" />
-              <span>My Subscription</span>
-            </a>
-            <a href="/InfMyProfilePage" className="flex items-center p-3 text-pink-500 border-b" onClick={toggleMobileMenu}>
-            {userProfile?.user?.profile_picture ? (
-              <img
-                src={getImageDisplayUrl(userProfile.user.profile_picture)}
-                alt="Profile preview"
-                className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
-              /> ) : (<User className="w-6 h-6 mr-3" />)}
-              <span>Profile</span>
-            </a>
-            <button
-              onClick={handleLogOut}
-              className="flex items-center p-3 text-gray-500 border-b cursor-pointer"
-            >
-              <LogOut className="w-6 h-6 mr-3" />
-              <span>Log out</span>
-            </button>
+          <nav className="flex flex-col p-4 h-full">
+            <div className="flex-1">
+              <a href="/WelcomePage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+                <Home className="w-6 h-6 mr-3" />
+                <span>Home</span>
+              </a>
+              <a href="/InfContracts" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+                <FileText className="w-6 h-6 mr-3" />
+                <span>Contracts</span>
+              </a>
+              <a href="/ConversationList" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+                <MessageCircle className="w-6 h-6 mr-3" />
+                <span>Message</span>
+              </a>
+              <a href="/MyPortfolioPage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+                <Briefcase className="w-6 h-6 mr-3" />
+                <span>My Portfolio</span>
+              </a>
+              <a href="/MySubscriptionPage" className="flex items-center p-3 text-gray-500 border-b" onClick={toggleMobileMenu}>
+                <Crown className="w-6 h-6 mr-3" />
+                <span>My Subscription</span>
+              </a>
+              <a href="/InfMyProfilePage" className="flex flex-grow items-center p-3 text-pink-500 border-b" onClick={toggleMobileMenu}>
+              {userProfile?.user?.profile_picture ? (
+                <img
+                  src={getImageDisplayUrl(userProfile.user.profile_picture)}
+                  alt="Profile preview"
+                  className="w-7 h-7 rounded-full object-cover border-2 border-gray-300 mr-3"
+                /> ) : (<User className="w-6 h-6 mr-3" />)}
+                <span>{userProfile?.user?.first_name}</span>
+              </a>
+            </div>
+
+            <div className="mt-auto">
+              <button
+                onClick={handleLogOut}
+                className="flex items-center p-3 text-gray-500 border-t cursor-pointer"
+              >
+                <LogOut className="w-6 h-6 mr-3" />
+                <span>Log out</span>
+              </button>
+            </div>
           </nav>
         </div>
       )}
@@ -243,7 +248,7 @@ const ProfilePage = () => {
           >
             <LogOut className="w-6 h-6 mr-3 text-pink-500" />
             <div className="text-left flex-1">
-              <div className="font-medium text-gray-800">Log out</div>
+              <div className="font-medium text-gray-800">Log out</div> 
             </div>
           </button>
         </div> 

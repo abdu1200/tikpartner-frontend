@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ChevronLeft, MoreVertical, X, Plus, Trash2 } from "lucide-react";
+import { ChevronLeft, MoreVertical, X, Plus, Trash2, FileText } from "lucide-react";
 import { useParams, useNavigate } from "react-router-dom";
 import backendUrl from "../../../../utils/backendUrl";
 
@@ -70,8 +70,21 @@ const ContractDetailPage = () => {
       }
     };
 
+    const removeFile = (index) => {
+      setSelectedFiles(prevFiles => prevFiles.filter((_, i) => i !== index));
+    };
+
+    const formatFileSize = (bytes) => {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    };
+
     const handleFileChange = (e) => {
-        setSelectedFiles(Array.from(e.target.files));
+        const files = Array.from(e.target.files);
+        setSelectedFiles(prevFiles => [...prevFiles, ...files]);
     };
 
     const handleUrlChange = (index, value) => {
@@ -336,9 +349,41 @@ const ContractDetailPage = () => {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-pink-500 cursor-pointer"
                     disabled={isSubmitting}
                   />
+
+                  {/* Selected Files Display */}
                   {selectedFiles.length > 0 && (
-                    <div className="mt-2 text-sm text-gray-600">
-                      {selectedFiles.length} file(s) selected
+                    <div className="mb-6">
+                      <h3 className="text-sm font-medium text-gray-700 mb-3">
+                        Selected Files ({selectedFiles.length})
+                      </h3>
+                      <div className="space-y-2 max-h-60 overflow-y-auto">
+                        {selectedFiles.map((file, index) => (
+                          <div
+                            key={index}
+                            className="flex items-center justify-between p-3 bg-gray-50 rounded-lg border"
+                          >
+                            <div className="flex items-center flex-1 min-w-0">
+                              <FileText className="w-5 h-5 text-gray-400 mr-3 flex-shrink-0" />
+                              <div className="flex-1 min-w-0">
+                                <p className="text-sm font-medium text-gray-900 truncate">
+                                  {file.name}
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {formatFileSize(file.size)}
+                                </p>
+                              </div>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => removeFile(index)}
+                              className="ml-3 p-1 text-red-600 hover:text-red-700 flex-shrink-0"
+                              disabled={isSubmitting}
+                            >
+                              <Trash2 className="w-4 h-4 cursor-pointer" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
                   )}
                 </div>

@@ -72,7 +72,7 @@ function ConversationList() {
             <div className="flex items-center">
               <h1 className="text-2xl font-medium">Messages</h1>
             </div>
-            <MessageNotifications />
+            {/* <MessageNotifications /> */}
           </div>
           
           {/* Search Bar */}

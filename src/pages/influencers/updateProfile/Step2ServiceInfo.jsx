@@ -74,7 +74,7 @@ export default function Step2ServiceInfo({ formData, handleChange, updateFormDat
     
     // Replace these values with your TikTok Developer App credentials
     const clientKey = "sbaweuralgopknrhuo";
-    const baseRedirectUri = "https://tikpartner.duckdns.org/InfluencerSignup";
+    const baseRedirectUri = "https://tikfrontend-latest.onrender.com/InfluencerSignup";
     const redirectUri = encodeURIComponent(baseRedirectUri); // this is a redirect uri where after a user authenticates(logs) with tiktok and authorizes its tiktok data to be used by the app, TikTok will then return the user to this page   # window.location.href refers to the same page(the current url of the page) that initiates the call(the OAuth process) w/h is 'InfluencerSignup'
     const scope = encodeURIComponent("user.info.basic,user.info.stats,user.info.profile,video.list");  // video.list scope allows my app to request access to the list of videos uploaded by the authenticated TikTok user. With this permission, you can fetch the user's videos and their metadata, such as the number of likes, comments, views, and more.
     const state = generateRandomState(); // Generate a random state for security

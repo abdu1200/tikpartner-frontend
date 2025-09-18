@@ -126,9 +126,9 @@ const ContractDetailPage = () => {
             <ChevronLeft size={20} />
           </button>
           <span className="text-base ml-1">View Released contract</span>
-          <div className="ml-auto text-xs text-gray-400">
+          {/* <div className="ml-auto text-xs text-gray-400">
             Fund released at {formatDate(contract.deliverable_approved_at)}
-          </div>
+          </div> */}
           
         </div>
         

@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const LandingPage = () => {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
   
   const goToInfluencers = () => {
     navigate('/InfluencerHomePage');
@@ -13,13 +14,58 @@ const LandingPage = () => {
   };
   
   useEffect(() => {
+    // Check for authentication on component mount
+    const checkAuth = () => {
+      try {
+        const accessToken = localStorage.getItem('accessToken');
+        
+        if (accessToken) {
+          // User is authenticated, check user type
+          const userString = localStorage.getItem('user');  //userString now is just a plain string(JSON string)
+          
+          if (userString) {
+            const user = JSON.parse(userString);
+            
+            if (user.user_type === 'influencer') {
+              navigate('/WelcomePage');
+              return;
+            } else if (user.user_type === 'brand') {
+              navigate('/BrowserInfluencersPage');
+              return;
+            }
+          }
+        }
+        
+        // No token or user data, show landing page
+        setIsLoading(false);
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        // If there's an error parsing data, show landing page
+        setIsLoading(false);
+      }
+    };
+
+    checkAuth();
+    
     // Add a subtle gradient background
     document.body.style.backgroundColor = '#fff5f8';
     
     return () => {
       document.body.style.backgroundColor = '';
     };
-  }, []);
+  }, [navigate]);
+  
+  // Show loading state while checking authentication
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-b from-white to-pink-50">
+        <div className="text-center">
+          <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-pink-600"></div>
+          <p className="mt-2 text-gray-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
   
   // Mobile layout (default)
   const mobileLayout = (

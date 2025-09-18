@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import image1 from '../../assets/ronaldo1.jpeg';
+import image1 from '../../assets/emebet.jpg';
+import image2 from '../../assets/amrogn.jpg';
+import image3 from '../../assets/orbit.jpg';
 import { useNavigate } from 'react-router-dom'
 
 
@@ -17,12 +19,12 @@ export default function HomePage() {
     },
     { 
       id: 1, 
-      src: image1, 
+      src: image2, 
       alt: "Woman in pink outfit talking on phone" 
     },
     { 
       id: 2, 
-      src: image1, 
+      src: image3, 
       alt: "Blue water bottle" 
     }
   ];

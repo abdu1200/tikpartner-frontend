@@ -37,6 +37,13 @@ const ContractDetailpage = () => {
 
 
     const handleDelete = async (review_id) => {
+
+      const confirmCancel = window.confirm(
+        'Are you sure you want to delete this review?'
+      );
+      
+      if (!confirmCancel) return;
+
       setIsDeleting(true);
       setError(null)
 
@@ -96,9 +103,9 @@ const ContractDetailpage = () => {
             <ChevronLeft size={20} />
           </button>
           <span className="text-base ml-1">View reviewed contract</span>
-          <div className="ml-auto text-xs text-gray-400">
+          {/* <div className="ml-auto text-xs text-gray-400">
             Review on: {formatDate(contract.review_created_at)}
-          </div>
+          </div> */}
           
         </div>
         

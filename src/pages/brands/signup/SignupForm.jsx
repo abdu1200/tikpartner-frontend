@@ -70,7 +70,7 @@ export default function SignupForm() {
 
       const categoryId = categoryIdMap[formData.businessType];
 
-      // Format the data according to the expected structure
+      // Format the data according to the expected structure for the sign up
       const requestData = {
         user: {
           username: formData.username,
@@ -85,19 +85,37 @@ export default function SignupForm() {
         company_name: formData.companyName,
         company_size: formData.companySize,
       };
-      
-      //console.log('Sending data:', JSON.stringify(requestData));
 
-      const response = await backendUrl.post('/auth/brand-register/', requestData);
+      // this below two are for the login
+      const email = formData.email;
+      const password = formData.password;
+
+      // Step 1: Register the user
+      const registerResponse = await backendUrl.post('/auth/brand-register/', requestData);
+      console.log('Registration successful:', registerResponse.data);
       
-      console.log('Registration successful:', response.data);
+      // Step 2: Automatically log them in
+      // Clear any existing tokens/data first
+      localStorage.clear();
       
+      const loginResponse = await backendUrl.post('/auth/login/', {
+        email,
+        password
+      });
+      
+      // Store tokens & user in localStorage
+      localStorage.setItem('accessToken', loginResponse.data.access);
+      localStorage.setItem('refreshToken', loginResponse.data.refresh);
+      localStorage.setItem('user', JSON.stringify(loginResponse.data.profile.user));
+      localStorage.setItem('profile', JSON.stringify(loginResponse.data.profile));
+      
+      console.log('Login successful', loginResponse.data);
+      
+      // Navigate directly to the browswer influencers page
       navigate('/BrowseInfluencersPage');
-
-      // You could redirect to login page or dashboard here
       
     } catch (err) {
-      console.log('Registration error:', err.message);
+      console.log('Registration or Login error:', err.message);
 
       if (err.response) {
         console.error('Error response data:', err.response.data);

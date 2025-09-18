@@ -86,7 +86,7 @@ export default function SignupForm() {
       
       const languageIds = formData.languages.map(lang => languageIdMap[lang]);
 
-      // Format the data according to the expected structure
+      // Format the data according to the expected structure for the sign up
       const requestData = {
         user: {
           username: formData.username,
@@ -108,17 +108,37 @@ export default function SignupForm() {
         video_count: Number(formData.tiktokVideoCount),
         likes_count: Number(formData.tiktokLikesCount),
       };
-      
-      //console.log('Sending data:', JSON.stringify(requestData));
 
-      const response = await backendUrl.post('/auth/influencer-register/', requestData);
+      // this below two are for the login
+      const email = formData.email;
+      const password = formData.password;
+
+      // Step 1: Register the user
+      const registerResponse = await backendUrl.post('/auth/influencer-register/', requestData);
+      console.log('Registration successful:', registerResponse.data);
       
-      console.log('Registration successful:', response.data);
-      // You could redirect to login page or dashboard here
+      // Step 2: Automatically log them in
+      // Clear any existing tokens/data first
+      localStorage.clear();
+      
+      const loginResponse = await backendUrl.post('/auth/login/', {
+        email,
+        password
+      });
+      
+      // Store tokens & user in localStorage
+      localStorage.setItem('accessToken', loginResponse.data.access);
+      localStorage.setItem('refreshToken', loginResponse.data.refresh);
+      localStorage.setItem('user', JSON.stringify(loginResponse.data.profile.user));
+      localStorage.setItem('profile', JSON.stringify(loginResponse.data.profile));
+      
+      console.log('Login successful', loginResponse.data);
+      
+      // Navigate directly to the welcome page
       navigate('/WelcomePage');
-      
+        
     } catch (err) {
-      console.log('Registration error:', err.message);
+      console.log('Registration or login error:', err.message);
 
       if (err.response) {
         console.error('Error response data:', err.response.data);

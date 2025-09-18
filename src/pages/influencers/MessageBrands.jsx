@@ -200,8 +200,8 @@ const MessageBrands = () => {
                   onClick={() => handleSendMessage(brand)}
                   className="w-full flex items-center justify-center py-2 px-4 bg-pink-500 hover:bg-pink-600 text-white rounded-lg transition-colors duration-200 cursor-pointer"
                 >
-                  {!isOpening && <Send className="w-4 h-4 mr-2"  /> }
-                  {isOpening ? 'Opening message interface...' : 'Send message'}
+                   <Send className="w-4 h-4 mr-2"  /> 
+                   Send message
                 </button>
               </div>
             ))}

@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const backendUrl = axios.create({ 
-  baseURL: 'https://tikpartner.duckdns.org/backend/',
+  baseURL: 'https://tikbackend.onrender.com/',
   headers: {
     'Content-Type': 'application/json',
   },

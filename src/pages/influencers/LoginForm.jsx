@@ -81,7 +81,7 @@ export default function LoginForm() {
         {error && (
           <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg text-red-700 text-sm">
             <p className="font-medium mb-1">Invalid Credentials</p>
-            <p>{error}</p>
+            {/* <p>{error}</p> */}
           </div>
         )}
 
